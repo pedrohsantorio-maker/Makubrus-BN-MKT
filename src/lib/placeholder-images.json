@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "print1",
+      "description": "Blurred chat conversation",
+      "imageUrl": "https://images.unsplash.com/photo-1604941878413-03a2f500ed4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjaGF0JTIwY29udmVyc2F0aW9ufGVufDB8fHx8MTc2MzU5NjYyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chat conversation"
+    },
+    {
+      "id": "print2",
+      "description": "Blurred private document",
+      "imageUrl": "https://images.unsplash.com/photo-1579642984417-0c00620f8e94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkb2N1bWVudCUyMGZpbGV8ZW58MHx8fHwxNzYzNTk2NjIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "document file"
+    },
+    {
+      "id": "print3",
+      "description": "Blurred group members list",
+      "imageUrl": "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZW9wbGUlMjBncm91cHxlbnwwfHx8fDE3NjM0OTEzNDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "people group"
+    },
+    {
+      "id": "print4",
+      "description": "Blurred media content",
+      "imageUrl": "https://images.unsplash.com/photo-1628583362853-d76ba7f08f26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx2aWRlbyUyMHBsYXllcnxlbnwwfHx8fDE3NjM1ODEyMzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "video player"
+    },
+    {
+      "id": "print5",
+      "description": "Another blurred chat",
+      "imageUrl": "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjaGF0JTIwYnViYmxlfGVufDB8fHx8MTc2MzU5NjAyM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chat bubble"
+    },
+    {
+      "id": "print6",
+      "description": "Secret file icon",
+      "imageUrl": "https://images.unsplash.com/photo-1684514038272-d0476d13b7fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzZWNyZXQlMjBmaWxlfGVufDB8fHx8MTc2MzU5NjYyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "secret file"
+    }
+  ]
 }
