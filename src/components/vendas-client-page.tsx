@@ -162,3 +162,5 @@ export function VendasClientPage({ featureCards }: VendasClientPageProps) {
     </div>
   );
 }
+
+    

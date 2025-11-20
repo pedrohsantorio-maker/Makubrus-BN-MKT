@@ -1,35 +1,25 @@
 import type { SVGProps } from 'react';
+import Image from 'next/image';
 
-export function SkullCrossbonesIcon({ size = 48, className, ...props }: SVGProps<SVGSVGElement> & { size?: number }) {
+export function SkullCrossbonesIcon({ size = 48, className, ...props }: { size?: number, className?: string }) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      {...props}
-    >
-      <path d="M46 40L18 58" />
-      <path d="M18 40L46 58" />
-      <circle cx="24" cy="58" r="4" />
-      <circle cx="40" cy="58" r="4" />
-      <circle cx="24" cy="40" r="4" />
-      <circle cx="40" cy="40" r="4" />
-      <path d="M20 32c0-8.837 5.373-16 12-16s12 7.163 12 16" />
-      <rect x="25" y="32" width="14" height="6" rx="2" />
-      <circle cx="25" cy="24" r="3" />
-      <circle cx="39" cy="24" r="3" />
-      <path d="M32 16a12 12 0 01-12 12M32 16a12 12 0 0012 12" />
-    </svg>
+    <div className="relative" style={{ width: size, height: size }}>
+      <motion.div
+        animate={{ scale: [1, 1.05, 1], opacity: [1, 0.9, 1] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ filter: 'drop-shadow(0 0 10px hsl(var(--primary)))' }}
+      >
+        <Image
+          src="https://i.imgur.com/8DEnxJ4.png"
+          alt="Ícone de caveira"
+          width={size}
+          height={size}
+          className={className}
+        />
+      </motion.div>
+    </div>
   );
 }
-
 
 export function Icon18Plus(props: SVGProps<SVGSVGElement>) {
   return (
@@ -75,3 +65,5 @@ export function ForbiddenIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+    
