@@ -16,22 +16,6 @@ interface VendasClientPageProps {
     carouselImages: ImagePlaceholder[];
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
-};
-
 export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
   const autoplayOptions = {
     delay: 2000,
@@ -63,21 +47,21 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
         </div>
       </motion.header>
 
-      <main className="pt-24 pb-16 relative z-10">
+      <main className="relative z-10">
         <SalesPageHero />
 
         <section className="py-12 w-full">
           <div className="carousel-wrapper" ref={emblaRef}>
             <div className="carousel-track">
               {duplicatedImages.map((image, index) => (
-                 <div key={index} className="carousel-item">
+                 <div key={index} className="carousel-item flex items-center justify-center min-w-[200px] sm:min-w-[220px] md:min-w-[240px] rounded-xl bg-black/70 border border-white/5 shadow-[0_0_20px_rgba(248,113,113,0.35)] px-3 py-3 overflow-hidden transition-transform transition-shadow duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(248,113,113,0.6)]">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
                       width={600}
                       height={400}
                       data-ai-hint={image.imageHint}
-                      className="carousel-image"
+                      className="carousel-image max-w-[90%] max-h-[220px] w-auto h-auto object-contain"
                     />
                  </div>
               ))}
@@ -90,17 +74,19 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}
-            variants={containerVariants}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+            }}
         >
-            <motion.h2 variants={itemVariants} className="font-headline text-4xl md:text-6xl font-bold tracking-tight">Vagas Quase Esgotadas</motion.h2>
-            <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground max-w-2xl">O acesso é extremamente limitado e será encerrado a qualquer momento. Esta é sua última oportunidade de entrar.</motion.p>
-            <motion.div variants={itemVariants} className="pt-8 w-full max-w-lg pointer-events-auto">
+            <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="font-headline text-4xl md:text-6xl font-bold tracking-tight">Vagas Quase Esgotadas</motion.h2>
+            <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-lg md:text-xl text-muted-foreground max-w-2xl">O acesso é extremamente limitado e será encerrado a qualquer momento. Esta é sua última oportunidade de entrar.</motion.p>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="pt-8 w-full max-w-lg pointer-events-auto">
                 <MotionButton onClick={() => logEvent('final_cta_click', { placement: 'footer' })} vibrate>
                     Entrar no grupo privado agora
                 </MotionButton>
             </motion.div>
         </motion.section>
-
       </main>
     </div>
   );
