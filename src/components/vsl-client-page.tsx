@@ -63,10 +63,14 @@ export function VslClientPage() {
             ASSISTA SE TIVER CORAGEM
           </motion.h1>
 
-          <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-            O que você está prestes a ver é extremo, confidencial e proibido para a maioria.
-Apenas continue se você realmente tiver coragem e sangue-frio.
-          </motion.p>
+          <motion.div variants={itemVariants} className="max-w-2xl space-y-2">
+            <p className="text-xl md:text-2xl text-white">
+              O que você está prestes a ver é extremo e não é para qualquer um.
+            </p>
+            <p className="text-lg text-muted-foreground">
+              Apenas continue se não for fraco e tiver coragem.
+            </p>
+          </motion.div>
           
           <motion.div 
             variants={itemVariants} 
