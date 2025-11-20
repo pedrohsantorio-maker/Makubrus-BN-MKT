@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CountdownTimer } from '@/components/countdown-timer';
-import { Icon18Plus, SkullIcon } from '@/components/icons';
+import { Icon18Plus, SkullCrossbonesIcon } from '@/components/icons';
 import { MotionButton } from '@/components/motion-button';
 import { logEvent } from '@/lib/firebase';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
@@ -62,8 +62,13 @@ const SalesPageHero = () => (
       <p className="text-base opacity-70">Não divulgue</p>
     </motion.div>
 
-    <motion.div variants={itemVariants} className="pt-2">
-      <SkullIcon className="w-12 h-12 text-white/80" />
+    <motion.div
+        variants={itemVariants}
+        className="pt-2"
+        animate={{ scale: [1, 1.02, 1], opacity: [1, 0.95, 1] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <SkullCrossbonesIcon className="w-12 h-12 text-white/80" style={{ filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.2))' }} />
     </motion.div>
     
     <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl pt-8">
@@ -81,9 +86,9 @@ const SalesPageHero = () => (
 export function VendasClientPage({ featureCards }: VendasClientPageProps) {
   return (
     <div className="bg-transparent text-white min-h-screen overflow-x-hidden pointer-events-none">
-       <div className="radial-gradient-overlay"></div>
-       <div className="vignette-overlay"></div>
-       <div className="noise-overlay"></div>
+       <div className="radial-gradient-overlay pointer-events-none"></div>
+       <div className="vignette-overlay pointer-events-none"></div>
+       <div className="noise-overlay pointer-events-none"></div>
       
       <motion.header 
         className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-md text-primary-foreground p-3 text-center border-b border-primary/20 shadow-[0_0_25px_rgba(255,0,0,0.3)] pointer-events-auto"
