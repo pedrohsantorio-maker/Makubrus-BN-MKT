@@ -68,7 +68,7 @@ const SalesPageHero = () => (
         animate={{ scale: [1, 1.02, 1], opacity: [1, 0.95, 1] }}
         transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <SkullCrossbonesIcon className="w-12 h-12 text-white/80" style={{ filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.2))' }} />
+        <SkullCrossbonesIcon size={48} className="text-white/80" style={{ filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.2))' }} />
     </motion.div>
     
     <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl pt-8">

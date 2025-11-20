@@ -4,7 +4,7 @@ import type { SVGProps } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-export function SkullCrossbonesIcon({ size = 48, className, ...props }: { size?: number, className?: string }) {
+export function SkullCrossbonesIcon({ size = 48, className }: { size?: number, className?: string }) {
   return (
     <div className="relative" style={{ width: size, height: size }}>
       <motion.div
