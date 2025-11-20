@@ -50,7 +50,7 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
         clearInterval(interval);
         return 1;
       });
-    }, 2800); // 7 decrements over ~20 seconds (20000ms / 7 = ~2857ms)
+    }, 4500); // Slower decrement
 
     return () => clearInterval(interval);
   }, []);
@@ -165,7 +165,7 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
                     <div className="text-left">
                         <p className="font-bold text-white text-lg tracking-wide">ÚLTIMAS VAGAS DISPONÍVEIS</p>
                         <div className="flex items-baseline gap-2">
-                           <span className={`font-headline text-4xl font-bold text-primary ${vagas <= 3 ? 'animate-flicker' : ''}`} style={{textShadow: `0 0 ${vagas <= 3 ? '15px' : '10px'} hsl(var(--primary))`}}>
+                           <span className={`font-headline text-4xl font-bold text-primary ${vagas <= 3 ? 'animate-flicker-intense' : ''}`} style={{textShadow: `0 0 ${vagas <= 3 ? '15px' : '8px'} hsl(var(--primary))`}}>
                              {vagas}
                            </span>
                            <span className="text-muted-foreground font-medium text-base">vagas restantes</span>
@@ -179,5 +179,6 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
     </div>
   );
 }
+
 
 

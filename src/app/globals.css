@@ -195,8 +195,16 @@
 }
 
 @keyframes flicker {
-  0%, 100% { opacity: 1; text-shadow: 0 0 5px hsl(var(--accent)), 0 0 10px hsl(var(--accent)); }
-  50% { opacity: 0.8; text-shadow: 0 0 3px hsl(var(--accent)), 0 0 8px hsl(var(--accent)); }
+  0%, 100% { opacity: 1; text-shadow: 0 0 5px hsl(var(--primary)), 0 0 10px hsl(var(--primary)); }
+  50% { opacity: 0.8; text-shadow: 0 0 3px hsl(var(--primary)), 0 0 8px hsl(var(--primary)); }
+}
+
+@keyframes flicker-intense {
+  0%, 100% { opacity: 1; transform: scale(1); text-shadow: 0 0 15px hsl(var(--primary)), 0 0 25px hsl(var(--primary)); }
+  50% { opacity: 0.7; transform: scale(1.05); text-shadow: 0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary)); }
+}
+.animate-flicker-intense {
+  animation: flicker-intense 1.2s infinite ease-in-out;
 }
 
 @keyframes scan-line {
@@ -248,4 +256,3 @@
 .animate-pulse-slow {
   animation: pulse-slow 4s infinite ease-in-out;
 }
-
