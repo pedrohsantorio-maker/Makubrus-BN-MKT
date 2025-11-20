@@ -71,16 +71,14 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
             <div className="carousel-track">
               {duplicatedImages.map((image, index) => (
                 <div key={index} className="carousel-item group">
-                   <div className="relative w-full h-full">
-                    <Image
+                   <Image
                       src={image.imageUrl}
                       alt={image.description}
-                      fill
+                      width={600}
+                      height={400}
                       data-ai-hint={image.imageHint}
                       className="carousel-image"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                     />
-                  </div>
                 </div>
               ))}
             </div>
