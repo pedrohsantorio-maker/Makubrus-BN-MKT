@@ -109,6 +109,7 @@ export function VslClientPage() {
                 autoPlay
                 muted
                 loop
+                preload="metadata"
               />
             </div>
           </motion.div>
