@@ -4,12 +4,14 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CountdownTimer } from '@/components/countdown-timer';
-import { SkullIcon } from '@/components/SkullIcon';
 import { MotionButton } from '@/components/motion-button';
 import { logEvent } from '@/lib/firebase';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
 import { ShieldAlert } from 'lucide-react';
 import { SalesPageHero } from '@/components/sales-page-hero';
+import React, { useEffect, useRef } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
 
 interface FeatureCard {
     title: string;
@@ -38,6 +40,16 @@ const itemVariants = {
 };
 
 export function VendasClientPage({ featureCards }: VendasClientPageProps) {
+  const autoplayOptions = {
+    delay: 2500,
+    stopOnInteraction: true,
+    stopOnMouseEnter: true,
+  };
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, dragFree: true }, [Autoplay(autoplayOptions)]);
+  
+  const duplicatedCards = [...featureCards, ...featureCards, ...featureCards];
+
   return (
     <div className="bg-transparent text-white min-h-screen overflow-x-hidden">
        <div className="radial-gradient-overlay pointer-events-none"></div>
@@ -61,40 +73,36 @@ export function VendasClientPage({ featureCards }: VendasClientPageProps) {
       <main className="pt-24 pb-16 px-4 md:px-8 relative z-10">
         <SalesPageHero />
 
-        <motion.section 
-            className="py-20 max-w-7xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            variants={containerVariants}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featureCards.map((card, index) => (
-              <motion.div key={index} variants={itemVariants} className="pointer-events-auto">
-                <Card className="bg-black/20 border border-white/10 shadow-lg shadow-black/50 overflow-hidden h-full flex flex-col transition-all duration-300 hover:border-white/20 hover:shadow-primary/20 hover:-translate-y-1">
-                  <CardHeader className="p-4">
-                    {card.image && (
-                       <div className="aspect-video w-full overflow-hidden rounded-md border border-white/10">
-                          <Image
-                          src={card.image.imageUrl}
-                          alt={card.image.description}
-                          width={600}
-                          height={400}
-                          data-ai-hint={card.image.imageHint}
-                          className="w-full h-full object-cover filter blur-sm scale-110"
-                          />
-                       </div>
-                    )}
-                  </CardHeader>
-                  <CardContent className="flex-grow p-4 pt-0">
-                    <CardTitle className="font-headline text-2xl mb-2">{card.title}</CardTitle>
-                    <p className="text-muted-foreground">{card.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+        <section className="py-20 w-full">
+          <div className="carousel-wrapper" ref={emblaRef}>
+            <div className="carousel-track">
+              {duplicatedCards.map((card, index) => (
+                <div key={index} className="carousel-item group">
+                   <div className="carousel-item-content">
+                      <CardHeader className="p-0 mb-4">
+                        {card.image && (
+                           <div className="aspect-video w-full overflow-hidden rounded-md border border-white/10">
+                              <Image
+                              src={card.image.imageUrl}
+                              alt={card.image.description}
+                              width={600}
+                              height={400}
+                              data-ai-hint={card.image.imageHint}
+                              className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-110"
+                              />
+                           </div>
+                        )}
+                      </CardHeader>
+                      <CardContent className="flex-grow p-0">
+                        <CardTitle className="font-headline text-2xl mb-2 text-neutral-100 group-hover:text-white">{card.title}</CardTitle>
+                        <p className="text-neutral-400 group-hover:text-neutral-300">{card.description}</p>
+                      </CardContent>
+                   </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </motion.section>
+        </section>
         
         <motion.section 
             className="text-center flex flex-col items-center space-y-6 pt-16"
