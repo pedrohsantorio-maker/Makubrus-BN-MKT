@@ -60,11 +60,12 @@ export function VslClientPage() {
             variants={itemVariants} 
             className="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter"
           >
-            Assista a Mensagem Importante
+            ASSISTA SE TIVER CORAGEM
           </motion.h1>
 
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-            O que você está prestes a ver é confidencial e sensível. Prossiga com atenção.
+            O que você está prestes a ver é extremo, confidencial e proibido para a maioria.
+Apenas continue se você realmente tiver coragem e sangue-frio.
           </motion.p>
           
           <motion.div 
