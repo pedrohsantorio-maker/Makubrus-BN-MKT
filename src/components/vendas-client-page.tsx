@@ -54,14 +54,14 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
           <div className="carousel-wrapper" ref={emblaRef}>
             <div className="carousel-track">
               {duplicatedImages.map((image, index) => (
-                 <div key={index} className="carousel-item flex items-center justify-center min-w-[200px] sm:min-w-[220px] md:min-w-[240px] rounded-xl bg-black/70 border border-white/5 shadow-[0_0_20px_rgba(248,113,113,0.35)] px-3 py-3 overflow-hidden transition-transform transition-shadow duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(248,113,113,0.6)]">
+                 <div key={index} className="carousel-item flex items-center justify-center min-w-[220px] sm:min-w-[260px] md:min-w-[300px] h-[220px] md:h-[260px] rounded-xl bg-black/70 border border-white/5 shadow-[0_0_20px_rgba(248,113,113,0.35)] p-3 overflow-hidden transition-transform transition-shadow duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(248,113,113,0.6)]">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
                       width={600}
                       height={400}
                       data-ai-hint={image.imageHint}
-                      className="carousel-image max-w-[90%] max-h-[220px] w-auto h-auto object-contain"
+                      className="carousel-image w-full h-full object-contain"
                     />
                  </div>
               ))}
