@@ -1,5 +1,8 @@
+"use client";
+
 import type { SVGProps } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 export function SkullCrossbonesIcon({ size = 48, className, ...props }: { size?: number, className?: string }) {
   return (
@@ -65,5 +68,3 @@ export function ForbiddenIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-    
