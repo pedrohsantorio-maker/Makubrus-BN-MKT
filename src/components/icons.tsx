@@ -1,28 +1,66 @@
 "use client";
 
-import type { SVGProps } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-export function SkullCrossbonesIcon({ size = 48 }: { size?: number }) {
+type SkullProps = {
+  size?: number;
+  className?: string;
+};
+
+export function SkullCrossbonesIcon({
+  size = 64,
+  className = "",
+}: SkullProps) {
   return (
     <motion.div
-      animate={{ scale: [1, 1.05, 1], opacity: [1, 0.9, 1] }}
+      animate={{ scale: [1, 1.05, 1], opacity: [1, 0.95, 1] }}
       transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
       className="flex justify-center"
+      style={{ width: size, height: size }}
     >
-      <Image
-        src="https://i.imgur.com/jaFYlYE.png"
-        alt="Ícone de caveira"
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 64 64"
         width={size}
         height={size}
-        className="skull-icon"
-      />
+        className={className}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {/* Ossos Cruzados */}
+        <path d="M16 48 L48 16" />
+        <path d="M18 14 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
+        <path d="M54 46 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
+        <path d="M16 16 L48 48" />
+        <path d="M18 50 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
+        <path d="M54 18 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
+        
+        {/* Cabeça da Caveira */}
+        <path d="M32 6 C 18 6, 12 18, 12 28 C 12 40, 18 46, 32 46 C 46 46, 52 40, 52 28 C 52 18, 46 6, 32 6 Z" />
+        
+        {/* Olhos */}
+        <circle cx="24" cy="26" r="4" />
+        <circle cx="40" cy="26" r="4" />
+        
+        {/* Nariz */}
+        <path d="M32 32 L 29 38 L 35 38 Z" />
+
+        {/* Dentes */}
+        <path d="M22 46 V 42" />
+        <path d="M27 46 V 42" />
+        <path d="M32 46 V 42" />
+        <path d="M37 46 V 42" />
+        <path d="M42 46 V 42" />
+      </svg>
     </motion.div>
   );
 }
 
-export function Icon18Plus(props: SVGProps<SVGSVGElement>) {
+
+export function Icon18Plus({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -34,7 +72,7 @@ export function Icon18Plus(props: SVGProps<SVGSVGElement>) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...props}
+      className={className}
     >
       <circle cx="12" cy="12" r="10" />
       <path d="M7 10h2" />
@@ -47,19 +85,19 @@ export function Icon18Plus(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function ForbiddenIcon(props: SVGProps<SVGSVGElement>) {
+export function ForbiddenIcon({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
-      viewBox="0 0 24"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      {...props}
+      className={className}
     >
       <circle cx="12" cy="12" r="10" />
       <path d="m4.9 4.9 14.2 14.2" />

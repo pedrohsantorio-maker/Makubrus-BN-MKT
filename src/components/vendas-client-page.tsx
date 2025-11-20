@@ -47,14 +47,14 @@ const SalesPageHero = () => (
       variants={itemVariants} 
       className="flex items-center justify-center gap-4"
     >
-      <Icon18Plus className="w-8 h-8 text-primary animate-pulse" style={{ filter: 'drop-shadow(0 0 8px hsl(var(--primary)))' }} />
+      <Icon18Plus className="w-8 h-8 text-primary animate-pulse drop-shadow-[0_0_8px_hsl(var(--primary))]" />
       <h1 
         className="font-headline text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-primary"
         style={{ textShadow: '0 0 5px hsl(var(--primary)), 0 0 15px hsl(var(--primary))' }}
       >
         MAK4BRUS OCULTOS
       </h1>
-      <Icon18Plus className="w-8 h-8 text-primary animate-pulse" style={{ filter: 'drop-shadow(0 0 8px hsl(var(--primary)))' }} />
+      <Icon18Plus className="w-8 h-8 text-primary animate-pulse drop-shadow-[0_0_8px_hsl(var(--primary))]" />
     </motion.div>
     
     <motion.div variants={itemVariants} className="text-center text-muted-foreground font-code">
@@ -65,10 +65,8 @@ const SalesPageHero = () => (
     <motion.div
         variants={itemVariants}
         className="pt-2"
-        animate={{ scale: [1, 1.02, 1], opacity: [1, 0.95, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <SkullCrossbonesIcon size={48} />
+        <SkullCrossbonesIcon size={48} className="text-white/80 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
     </motion.div>
     
     <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl pt-8">
