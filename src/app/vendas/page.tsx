@@ -1,9 +1,9 @@
 import { VendasClientPage } from '@/components/vendas-client-page';
-import { PlaceHolderImages, type ImagePlaceholder } from '@/lib/placeholder-images';
+import { PlaceHolderImages, PreviewImages, type ImagePlaceholder } from '@/lib/placeholder-images';
 
 export default function SalesPage() {
-  // Directly use the placeholder images as the data source for the carousel
   const carouselImages: ImagePlaceholder[] = PlaceHolderImages;
+  const previewImages: ImagePlaceholder[] = PreviewImages;
 
-  return <VendasClientPage carouselImages={carouselImages} />;
+  return <VendasClientPage carouselImages={carouselImages} previewImages={previewImages} />;
 }

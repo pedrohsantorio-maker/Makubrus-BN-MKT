@@ -14,9 +14,19 @@ import Autoplay from 'embla-carousel-autoplay';
 
 interface VendasClientPageProps {
     carouselImages: ImagePlaceholder[];
+    previewImages: ImagePlaceholder[];
 }
 
-export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
+const previewVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.15 + i * 0.08, duration: 0.5, ease: "easeOut" },
+  }),
+};
+
+export function VendasClientPage({ carouselImages, previewImages }: VendasClientPageProps) {
   const autoplayOptions = {
     delay: 2000,
     stopOnInteraction: true,
@@ -54,16 +64,50 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
           <div className="carousel-wrapper" ref={emblaRef}>
             <div className="carousel-track">
               {duplicatedImages.map((image, index) => (
-                 <div key={index} className="carousel-item flex items-center justify-center min-w-[220px] sm:min-w-[260px] md:min-w-[300px] h-[220px] md:h-[260px] rounded-xl bg-black/70 border border-white/5 shadow-[0_0_20px_rgba(248,113,113,0.35)] p-3 overflow-hidden transition-transform transition-shadow duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(248,113,113,0.6)]">
+                 <div key={index} className="carousel-item">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
                       width={300}
                       height={260}
                       data-ai-hint={image.imageHint}
-                      className="carousel-image w-full h-full object-contain"
+                      className="carousel-image block w-full h-full object-contain rounded-[0.6rem]"
                     />
                  </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative mt-12 sm:mt-16">
+          <div className="relative max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center">
+              <h2 className="font-headline text-4xl md:text-5xl font-bold text-neutral-100">Um gostinho do que você vai receber</h2>
+              <p className="mt-2 max-w-2xl mx-auto text-lg text-neutral-400">Abaixo você vê apenas uma pequena prévia do tipo de material que fica disponível dentro do portal oculto.</p>
+            </div>
+            
+            <div className="mt-8 grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {previewImages.map((image, index) => (
+                <motion.div
+                  key={image.id}
+                  custom={index}
+                  variants={previewVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
+                  className="preview-card group relative overflow-hidden rounded-2xl bg-gradient-to-b from-red-900/40 via-black to-black border border-red-500/20 shadow-[0_0_25px_rgba(248,113,113,0.35)]"
+                >
+                  <div className="relative aspect-[9/16] overflow-hidden">
+                    <Image
+                      src={image.imageUrl}
+                      alt={image.description}
+                      fill
+                      className="preview-image h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300" />
+                    <div className="pointer-events-none absolute inset-x-0 -top-full h-16 bg-gradient-to-b from-transparent via-red-500/25 to-transparent preview-scan" />
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>

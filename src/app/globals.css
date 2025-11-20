@@ -146,21 +146,35 @@
     @apply flex gap-4 will-change-transform;
   }
   .carousel-item {
-    @apply relative flex items-center justify-center flex-shrink-0 bg-black/60 rounded-xl border border-white/5 backdrop-blur-sm transition-all duration-500 overflow-hidden p-3 shadow-lg;
-    @apply min-w-[220px] sm:min-w-[260px] md:min-w-[300px];
+    @apply relative flex items-center justify-center flex-shrink-0 bg-black/80 rounded-xl border border-white/5 backdrop-blur-sm transition-all duration-500 overflow-hidden p-[3px] sm:p-1 shadow-lg;
+    @apply min-w-[220px] sm:min-w-[230px] md:min-w-[240px];
     animation: pulseGlow 4s infinite ease-in-out;
     perspective: 1000px;
     transform-style: preserve-3d;
   }
   .carousel-item:hover {
-    @apply scale-[1.03] shadow-[0_0_40px_rgba(255,0,0,0.4)];
+    @apply scale-[1.03] shadow-[0_0_30px_rgba(255,0,0,0.4)];
   }
   .carousel-image {
-    @apply block w-full h-auto object-contain transition-transform duration-500 ease-out;
+    @apply block w-full h-full object-contain rounded-[0.6rem] transition-transform duration-500 ease-out;
   }
   .carousel-item:hover .carousel-image {
     transform: scale(1.06);
     filter: brightness(1.15);
+  }
+
+  .preview-card {
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .preview-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 0 40px rgba(248, 113, 113, 0.6);
+  }
+
+  .preview-scan {
+    animation: scanLine 4s linear infinite;
   }
 }
 
@@ -219,4 +233,13 @@
   50%{ transform: translate(5px,-5px);}
   75%{ transform: translate(-5px,-5px);}
   100%{ transform: translate(0,0);}
+}
+
+@keyframes scanLine {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
 }

@@ -36,5 +36,22 @@
       "imageUrl": "https://i.imgur.com/3owb2gd.png",
       "imageHint": "classified folder"
     }
+  ],
+  "previewImages": [
+    {
+      "id": "preview1",
+      "imageUrl": "https://i.imgur.com/Z5sU8L3.png",
+      "description": "Prévia do conteúdo interno 1"
+    },
+    {
+      "id": "preview2",
+      "imageUrl": "https://i.imgur.com/LF4TKkw.png",
+      "description": "Prévia do conteúdo interno 2"
+    },
+    {
+      "id": "preview3",
+      "imageUrl": "https://i.imgur.com/WfDXV3f.png",
+      "description": "Prévia do conteúdo interno 3"
+    }
   ]
 }
