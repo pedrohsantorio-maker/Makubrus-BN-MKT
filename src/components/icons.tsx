@@ -4,13 +4,13 @@ import type { SVGProps } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-export function SkullCrossbonesIcon({ size = 48, className }: { size?: number, className?: string }) {
+export function SkullCrossbonesIcon({ size = 48 }: { size?: number }) {
   return (
     <motion.div
-        animate={{ scale: [1, 1.05, 1], opacity: [1, 0.9, 1] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        className="flex justify-center"
-      >
+      animate={{ scale: [1, 1.05, 1], opacity: [1, 0.9, 1] }}
+      transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      className="flex justify-center"
+    >
       <Image
         src="https://i.imgur.com/jaFYlYE.png"
         alt="Ícone de caveira"

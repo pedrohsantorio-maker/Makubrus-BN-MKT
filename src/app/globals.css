@@ -115,9 +115,6 @@
 @layer components {
   .skull-icon {
     filter:
-      invert(1)
-      brightness(2)
-      contrast(2)
       drop-shadow(0 0 14px hsl(var(--primary) / 0.85));
     transition: transform 0.3s ease, filter 0.3s ease;
   }
@@ -125,9 +122,6 @@
   .skull-icon:hover {
     transform: scale(1.05);
     filter:
-      invert(1)
-      brightness(2.2)
-      contrast(2.2)
       drop-shadow(0 0 20px hsl(var(--primary) / 1));
   }
 }
