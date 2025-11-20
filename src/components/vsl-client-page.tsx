@@ -104,8 +104,7 @@ export function VslClientPage() {
               <video
                 controls
                 className="w-full h-full rounded-md"
-                // Substitua a URL abaixo pela URL do seu vídeo
-                src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-video.mp4"
+                src="https://screenapp.io/app/v/3_qqJHrmVi"
                 autoPlay
                 muted
                 loop
