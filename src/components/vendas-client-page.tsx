@@ -39,19 +39,21 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
   
   const duplicatedImages = [...carouselImages, ...carouselImages, ...carouselImages];
 
-  const [vagas, setVagas] = useState(5);
+  const [vagas, setVagas] = useState(8);
 
   useEffect(() => {
-    if (vagas === 0) return;
+    const interval = setInterval(() => {
+      setVagas((v) => {
+        if (v > 1) {
+          return v - 1;
+        }
+        clearInterval(interval);
+        return 1;
+      });
+    }, 2800); // 7 decrements over ~20 seconds (20000ms / 7 = ~2857ms)
 
-    const randomTimeout = Math.random() * (15000 - 5000) + 5000; // entre 5 e 15 segundos
-
-    const interval = setTimeout(() => {
-      setVagas((v) => Math.max(0, v - 1));
-    }, randomTimeout);
-
-    return () => clearTimeout(interval);
-  }, [vagas]);
+    return () => clearInterval(interval);
+  }, []);
 
 
   return (
@@ -163,7 +165,7 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
                     <div className="text-left">
                         <p className="font-bold text-white text-lg tracking-wide">ÚLTIMAS VAGAS DISPONÍVEIS</p>
                         <div className="flex items-baseline gap-2">
-                           <span className="font-headline text-4xl font-bold text-primary animate-flicker" style={{textShadow: '0 0 10px hsl(var(--primary))'}}>
+                           <span className={`font-headline text-4xl font-bold text-primary ${vagas <= 3 ? 'animate-flicker' : ''}`} style={{textShadow: `0 0 ${vagas <= 3 ? '15px' : '10px'} hsl(var(--primary))`}}>
                              {vagas}
                            </span>
                            <span className="text-muted-foreground font-medium text-base">vagas restantes</span>
@@ -177,4 +179,5 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
     </div>
   );
 }
+
 
