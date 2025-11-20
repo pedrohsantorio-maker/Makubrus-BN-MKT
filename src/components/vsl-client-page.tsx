@@ -63,11 +63,16 @@ export function VslClientPage() {
             ASSISTA SE TIVER CORAGEM
           </motion.h1>
 
-          <motion.div variants={itemVariants} className="max-w-2xl space-y-2">
-            <p className="text-xl md:text-2xl text-white">
-              O que você está prestes a ver é extremo e não é para qualquer um.
-            </p>
-            <p className="text-lg text-muted-foreground">
+          <motion.div variants={itemVariants} className="max-w-2xl w-full space-y-4 text-center">
+            <div>
+              <p className="text-xl md:text-2xl text-white font-semibold tracking-wide" style={{ textShadow: '0 0 12px hsla(var(--primary), 0.4)'}}>
+                O que você está prestes a ver é extremo e não é para qualquer um.
+              </p>
+              <div className="mt-3 mx-auto h-px w-40 bg-primary/30 relative overflow-hidden">
+                <div className="absolute top-0 left-0 h-full w-1/4 bg-primary animate-scan-line"></div>
+              </div>
+            </div>
+            <p className="text-lg text-muted-foreground pt-1">
               Apenas continue se não for fraco e tiver coragem.
             </p>
           </motion.div>
