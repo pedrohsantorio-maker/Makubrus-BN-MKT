@@ -26,9 +26,9 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <div className="noise-overlay"></div>
-        <div className="vignette-overlay"></div>
-        <div className="radial-gradient-overlay"></div>
+        <div className="noise-overlay pointer-events-none"></div>
+        <div className="vignette-overlay pointer-events-none"></div>
+        <div className="radial-gradient-overlay pointer-events-none"></div>
         <div className="relative z-10">{children}</div>
       </body>
     </html>

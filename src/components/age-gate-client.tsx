@@ -36,12 +36,12 @@ export function AgeGateClient() {
 
   return (
     <motion.div 
-      className="relative flex flex-col items-center justify-center text-center text-white space-y-8 p-8 border border-white/10 bg-black/30 rounded-lg shadow-2xl shadow-primary/10 backdrop-blur-sm"
+      className="relative z-20 flex flex-col items-center justify-center text-center text-white space-y-8 p-8 border border-white/10 bg-black/30 rounded-lg shadow-2xl shadow-primary/10 backdrop-blur-sm pointer-events-auto"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
-      <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/30 to-primary/10 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+      <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/30 to-primary/10 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
       
       <motion.div variants={itemVariants}>
         <Icon18Plus className="h-24 w-24 text-primary" style={{ filter: 'drop-shadow(0 0 10px hsl(var(--primary)))' }} />
@@ -63,7 +63,7 @@ export function AgeGateClient() {
         variants={itemVariants}
       >
         <motion.div 
-          className="w-full"
+          className="w-full relative z-30 pointer-events-auto"
           whileHover={{ scale: 1.05, y: -2 }} 
           whileTap={{ scale: 0.95 }}
         >
@@ -75,7 +75,7 @@ export function AgeGateClient() {
           </Button>
         </motion.div>
         <motion.div 
-          className="w-full"
+          className="w-full relative z-30 pointer-events-auto"
           whileHover={{ scale: 1.05, y: -2 }} 
           whileTap={{ scale: 0.95 }}
         >
