@@ -41,7 +41,6 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
 
   const [emblaRef] = useEmblaCarousel({ loop: true, dragFree: true }, [Autoplay(autoplayOptions)]);
   
-  // Duplicate images for a seamless infinite loop effect
   const duplicatedImages = [...carouselImages, ...carouselImages, ...carouselImages];
 
   return (
@@ -64,7 +63,7 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
         </div>
       </motion.header>
 
-      <main className="pt-24 pb-16 px-4 md:px-8 relative z-10">
+      <main className="pt-24 pb-16 relative z-10">
         <SalesPageHero />
 
         <section className="py-20 w-full">
@@ -72,16 +71,14 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
             <div className="carousel-track">
               {duplicatedImages.map((image, index) => (
                 <div key={index} className="carousel-item group">
-                   <div className="carousel-item-content p-0 overflow-hidden">
-                      <Image
-                        src={image.imageUrl}
-                        alt={image.description}
-                        width={600}
-                        height={400}
-                        data-ai-hint={image.imageHint}
-                        className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 group-hover:brightness-110"
-                      />
-                   </div>
+                  <Image
+                    src={image.imageUrl}
+                    alt={image.description}
+                    fill
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                    data-ai-hint={image.imageHint}
+                    className="carousel-image"
+                  />
                 </div>
               ))}
             </div>
@@ -89,7 +86,7 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
         </section>
         
         <motion.section 
-            className="text-center flex flex-col items-center space-y-6 pt-16"
+            className="text-center flex flex-col items-center space-y-6 pt-16 px-4 md:px-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}

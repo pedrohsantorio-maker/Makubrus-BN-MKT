@@ -126,7 +126,7 @@
   
   /* Carousel Styles */
   .carousel-wrapper {
-    @apply relative overflow-hidden py-10;
+    @apply relative overflow-hidden py-10 px-4;
   }
   .carousel-wrapper::before {
     content: "";
@@ -143,25 +143,25 @@
     pointer-events: none;
   }
   .carousel-track {
-    @apply flex gap-6 will-change-transform;
+    @apply flex gap-4 will-change-transform;
   }
   .carousel-item {
-    @apply relative flex-shrink-0 bg-[#0c0c0e] rounded-xl border border-white/5 backdrop-blur-sm shadow-[0_0_20px_rgba(255,0,0,0.2)] transition-transform duration-500 ease-in-out;
-    min-width: 280px;
+    @apply relative flex-shrink-0 bg-black/40 rounded-xl border border-white/5 backdrop-blur-sm transition-all duration-500 overflow-hidden;
+    @apply min-w-[220px] h-[180px] sm:min-w-[260px] md:min-w-[300px] md:h-[240px];
+    max-height: 260px;
     animation: pulseGlow 4s infinite ease-in-out;
     perspective: 1000px;
     transform-style: preserve-3d;
   }
-  @screen md {
-    .carousel-item {
-      min-width: 360px;
-    }
-  }
   .carousel-item:hover {
-    @apply scale-[1.04] shadow-[0_0_40px_rgba(255,0,0,0.5)] -rotate-1 brightness-125;
+    @apply scale-[1.03] shadow-[0_0_40px_rgba(255,0,0,0.4)];
   }
-  .carousel-item-content {
-    @apply h-full w-full p-4 flex flex-col;
+  .carousel-image {
+    @apply w-full h-full object-cover transition-transform duration-500 ease-out;
+  }
+  .carousel-item:hover .carousel-image {
+    transform: scale(1.06);
+    filter: brightness(1.15);
   }
 }
 
@@ -209,9 +209,9 @@
 }
 
 @keyframes pulseGlow {
-  0% { box-shadow: 0 0 15px rgba(255,0,0,0.2); }
+  0% { box-shadow: 0 0 18px rgba(255,0,0,0.28); }
   50% { box-shadow: 0 0 30px rgba(255,0,0,0.4); }
-  100% { box-shadow: 0 0 15px rgba(255,0,0,0.2); }
+  100% { box-shadow: 0 0 18px rgba(255,0,0,0.28); }
 }
 
 @keyframes noiseMove {
@@ -221,4 +221,3 @@
   75%{ transform: translate(-5px,-5px);}
   100%{ transform: translate(0,0);}
 }
-
