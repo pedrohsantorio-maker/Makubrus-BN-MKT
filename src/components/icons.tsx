@@ -12,50 +12,35 @@ export function SkullCrossbonesIcon({
   className = "",
 }: SkullProps) {
   return (
-    <motion.div
-      animate={{ scale: [1, 1.02, 1], opacity: [1, 0.95, 1] }}
-      transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-      className="flex justify-center"
-      style={{ width: size, height: size }}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width={size}
+      height={size}
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.4}
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 64 64"
-        width={size}
-        height={size}
-        className={className}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2.2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {/* Ossos Cruzados */}
-        <path d="M14 50 L50 14" />
-        <path d="M12 12.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(45 10 12.5)" />
-        <path d="M58 51.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(45 54 51.5)" />
-        <path d="M14 14 L50 50" />
-        <path d="M12 51.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(-45 10 51.5)" />
-        <path d="M58 12.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(-45 54 12.5)" />
-        
-        {/* Cabeça da Caveira */}
-        <path d="M32 8 C 18 8, 12 20, 12 30 C 12 42, 18 50, 32 50 C 46 50, 52 42, 52 30 C 52 20, 46 8, 32 8 Z" />
-        
-        {/* Olhos */}
-        <circle cx="24" cy="28" r="5" />
-        <circle cx="40" cy="28" r="5" />
-        
-        {/* Nariz */}
-        <path d="M32 34 L 29 40 L 35 40 Z" />
-
-        {/* Dentes */}
-        <path d="M22 50 V 45" />
-        <path d="M27 50 V 45" />
-        <path d="M32 50 V 45" />
-        <path d="M37 50 V 45" />
-        <path d="M42 50 V 45" />
-      </svg>
-    </motion.div>
+      <path d="M32 8c-7.5 0-14 5.6-14 14v6c0 3.3 1.6 6.2 4.3 7.9V42c0 1.3.5 2.6 1.5 3.5L26 48h12l2.2-2.5c1-1 1.5-2.2 1.5-3.5v-6.1C44.4 34.2 46 31.3 46 28v-6c0-8.4-6.5-14-14-14Z" />
+      <circle cx="26" cy="24" r="3" />
+      <circle cx="38" cy="24" r="3" />
+      <path d="M30 30l2 3 2-3" />
+      <path d="M24 34c2.5 3 5 4 8 4s5.5-1 8-4" />
+      <path d="M26 34v3" />
+      <path d="M29 35v3" />
+      <path d="M32 35v3" />
+      <path d="M35 35v3" />
+      <path d="M38 34v3" />
+      <path d="M14 44l10 6" />
+      <path d="M18 38l6 3" />
+      <path d="M50 44l-10 6" />
+      <path d="M46 38l-6 3" />
+      <path d="M18 50c-2 1-4.5.4-5.5-1.6-1-2-.1-4.4 1.9-5.4" />
+      <path d="M46 50c2 1 4.5.4 5.5-1.6 1-2 .1-4.4-1.9-5.4" />
+    </svg>
   );
 }
 

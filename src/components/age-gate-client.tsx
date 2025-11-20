@@ -43,8 +43,11 @@ export function AgeGateClient() {
     >
       <div className="absolute pointer-events-none -inset-0.5 rounded-lg bg-gradient-to-r from-primary/30 to-primary/10 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
       
-      <motion.div variants={itemVariants} className="relative z-30">
-        <SkullCrossbonesIcon size={96} className="text-primary drop-shadow-[0_0_12px_hsl(var(--primary))]"/>
+      <motion.div variants={itemVariants} className="relative z-30 mb-4">
+        <SkullCrossbonesIcon
+          size={96}
+          className="text-primary drop-shadow-[0_0_12px_hsl(var(--primary))]"
+        />
       </motion.div>
       <motion.h1
         className="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter"
