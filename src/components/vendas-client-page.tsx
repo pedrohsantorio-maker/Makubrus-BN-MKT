@@ -66,7 +66,7 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
       <main className="pt-24 pb-16 relative z-10">
         <SalesPageHero />
 
-        <section className="py-20 w-full">
+        <section className="py-12 w-full">
           <div className="carousel-wrapper" ref={emblaRef}>
             <div className="carousel-track">
               {duplicatedImages.map((image, index) => (

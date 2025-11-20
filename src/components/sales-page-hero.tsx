@@ -23,7 +23,7 @@ const itemVariants = {
 
 export const SalesPageHero = () => (
   <motion.section 
-    className="text-center flex flex-col items-center space-y-4 min-h-[70vh] justify-center"
+    className="text-center flex flex-col items-center space-y-4 justify-center px-4 pt-8 pb-10"
     initial="hidden"
     animate="visible"
     variants={containerVariants}
@@ -72,7 +72,7 @@ export const SalesPageHero = () => (
     <motion.p variants={itemVariants} className="text-lg md:text-xl text-neutral-200/90 max-w-3xl pt-8 leading-relaxed">
       Acesso liberado a uma coleção de materiais restritos, raros e privados. O que você verá aqui não pode ser encontrado em nenhum outro lugar.
     </motion.p>
-    <motion.div variants={itemVariants} className="pt-8 w-full max-w-lg pointer-events-auto">
+    <motion.div variants={itemVariants} className="pt-8 w-full max-w-md pointer-events-auto">
       <MotionButton onClick={() => logEvent('main_cta_click', { placement: 'hero' })} pulse>
         GARANTIR ACESSO VITALÍCIO
       </MotionButton>
