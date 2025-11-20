@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Icon18Plus } from '@/components/icons';
+import { ForbiddenIcon } from '@/components/icons';
 import { logEvent } from '@/lib/firebase';
 
 export function AgeGateClient() {
@@ -43,8 +43,8 @@ export function AgeGateClient() {
     >
       <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/30 to-primary/10 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
       
-      <motion.div variants={itemVariants}>
-        <Icon18Plus className="h-24 w-24 text-primary" style={{ filter: 'drop-shadow(0 0 10px hsl(var(--primary)))' }} />
+      <motion.div variants={itemVariants} className="pointer-events-auto relative z-30">
+        <ForbiddenIcon className="h-24 w-24 text-primary animate-pulse" style={{ filter: 'drop-shadow(0 0 10px hsl(var(--primary)))' }} />
       </motion.div>
       <motion.h1
         className="font-headline text-5xl md:text-7xl font-extrabold tracking-tighter"
