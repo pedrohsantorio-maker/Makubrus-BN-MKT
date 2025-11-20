@@ -13,7 +13,7 @@ export function SkullCrossbonesIcon({ size = 48, className }: { size?: number, c
         style={{ filter: 'drop-shadow(0 0 10px hsl(var(--primary)))' }}
       >
         <Image
-          src="https://i.imgur.com/8DEnxJ4.png"
+          src="https://i.imgur.com/jaFYlYE.png"
           alt="Ícone de caveira"
           width={size}
           height={size}
