@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 100% 50%;
+    --primary: 0 100% 50%; /* Red */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 125 95% 55%;
-    --accent-foreground: 0 0% 3.9%;
-    --destructive: 0 100% 50%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 0 100% 50%; /* Red */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 100% 50%;
-    --radius: 0.25rem;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 0 100% 50%; /* Red */
+    --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -32,25 +32,25 @@
   }
 
   .dark {
-    --background: 0 0% 0%;
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 100% 50%;
+    --primary: 0 100% 50%; /* Red */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 125 95% 55%;
-    --accent-foreground: 0 0% 3.9%;
-    --destructive: 0 100% 50%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 0 100% 50%; /* Red */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 100% 50%;
+    --border: 240 3.7% 20%;
+    --input: 240 3.7% 15.9%;
+    --ring: 0 100% 50%; /* Red */
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -64,6 +64,74 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#010103] text-foreground;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAXxJREFUaIHt2kFKA0EQBuAwKCIi6EM4dJdC4cIugp3Yu3Al3sUv4BfuBbuIsLgRdwZ3Kog/vT5JT6dE9Drx6Y6qutqrPg2m0y7E8N+dARwAvG1h3Q4+w+9xJ0DWgLSBEkGSAJKAIEDi4L19c4yP4f/BNgAsoJgkA5YBSYAUIClYDmQHCgGSApw4EATsF7Id8AdcAFcAB8AFMAVcAQOAG2AKuAs8A1YCr8CDwAiwCLwPPAI8Ap8Bj8CzwI/AAuDv/NvADLALDAPfAZfASMAPsAgMgz/bATyB2fAZ/AQ8AZ/AG/gBfAEfwC/wC/wH/gAn8Az+BE/gGfwMnoGP4Bf4G/wSfgBv4U/wp/gV/g3/CH+Bv8Ff4Y/wR/gd/AH+CP8Cf4S/wV/hX/Bn+A/8Ef4h/wR/hX/BP+Bf8G/4N/wH/hn/AP+Gf8A/4x/xj/hv/Ef+A/8R/4h/xX/iP/Ff+A/8Z/45/x3/if/Af+D/8C/g9+AMs0y7ETwAWG2Y4I1g3AAAAAElFTkSuQmCC');
+    background-size: 50px 50px;
+    background-repeat: repeat;
+    animation: noise-animation 1s steps(4) infinite;
+    position: relative;
+    overflow-x: hidden;
   }
+  .radial-gradient-overlay {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(12, 15, 29, 0) 0%, #010103 70%);
+    pointer-events: none;
+    z-index: 1;
+    animation: pulse-glow 15s ease-in-out infinite;
+  }
+  .vignette-overlay {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 150px 20px #010103;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .noise-overlay {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-size: 256px;
+    opacity: 0.025;
+    animation: noise-pan 15s linear infinite;
+    pointer-events: none;
+    z-index: 3;
+    will-change: transform;
+  }
+}
+
+@keyframes noise-animation {
+  0% { background-position: 0 0; }
+  25% { background-position: 10px 10px; }
+  50% { background-position: 20px 0; }
+  75% { background-position: 0 20px; }
+  100% { background-position: 0 0; }
+}
+
+@keyframes noise-pan {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-256px, -256px); }
+}
+
+@keyframes pulse-glow {
+  0% { background: radial-gradient(circle at 50% 50%, rgba(18, 18, 29, 0.2) 0%, #010103 70%); }
+  50% { background: radial-gradient(circle at 50% 50%, rgba(18, 18, 29, 0.3) 0%, #010103 70%); }
+  100% { background: radial-gradient(circle at 50% 50%, rgba(18, 18, 29, 0.2) 0%, #010103 70%); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; text-shadow: 0 0 5px hsl(var(--accent)), 0 0 10px hsl(var(--accent)); }
+  50% { opacity: 0.8; text-shadow: 0 0 3px hsl(var(--accent)), 0 0 8px hsl(var(--accent)); }
 }

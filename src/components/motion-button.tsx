@@ -17,16 +17,23 @@ export function MotionButton({ children, onClick, className, pulse = false, vibr
   
   const pulseAnimation = {
     scale: [1, 1.03, 1],
+    boxShadow: [
+      "0 0 15px rgba(255,0,0,0.5), inset 0 0 5px rgba(255,255,255,0.2)",
+      "0 0 30px rgba(255,0,0,0.8), inset 0 0 8px rgba(255,255,255,0.3)",
+      "0 0 15px rgba(255,0,0,0.5), inset 0 0 5px rgba(255,255,255,0.2)"
+    ]
   };
+
   const pulseTransition = {
-    duration: 1.5,
+    duration: 2.5,
     repeat: Infinity,
-    repeatDelay: 1.5
+    ease: "easeInOut"
   };
 
   const vibrateAnimation = {
     x: [0, -1.5, 1.5, -1.5, 1.5, 0],
   };
+
   const vibrateTransition = {
     duration: 0.4,
     repeat: Infinity,
@@ -42,20 +49,24 @@ export function MotionButton({ children, onClick, className, pulse = false, vibr
   }
   if (vibrate) {
     animate = { ...animate, ...vibrateAnimation };
-    transition = { ...transition, ...vibrateTransition };
+    // note: vibrate transition is shorter, we need to ensure it loops correctly
+    transition = { ...transition, x: vibrateTransition };
   }
 
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: 0.95 }}
       animate={animate}
       transition={transition}
+      className="rounded-md"
     >
       <Button
         onClick={onClick}
         className={cn(
-          "w-full bg-primary text-primary-foreground font-bold py-6 text-lg tracking-wider uppercase shadow-[0_0_15px_rgba(255,0,0,0.7)] hover:shadow-[0_0_30px_rgba(255,0,0,1)] transition-all duration-300 ease-in-out",
+          "w-full bg-primary/90 text-primary-foreground font-bold py-6 text-lg tracking-wider uppercase rounded-md border border-primary transition-all duration-300",
+          "shadow-[0_0_15px_rgba(255,0,0,0.5),inset_0_0_5px_rgba(255,255,255,0.2)]",
+          "hover:shadow-[0_0_30px_rgba(255,0,0,0.8)] hover:bg-primary",
           className
         )}
       >
