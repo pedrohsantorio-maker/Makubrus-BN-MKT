@@ -68,10 +68,10 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
-                      width={300}
-                      height={260}
+                      width={260}
+                      height={420}
                       data-ai-hint={image.imageHint}
-                      className="carousel-image block w-full h-full object-contain rounded-[0.6rem]"
+                      className="carousel-image"
                     />
                  </div>
               ))}
