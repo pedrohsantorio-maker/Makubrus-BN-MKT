@@ -30,10 +30,10 @@ export const SalesPageHero = () => (
   >
     <motion.div 
       variants={itemVariants} 
-      className="flex items-center justify-center gap-4"
+      className="flex items-center justify-center gap-4 w-full"
     >
       <motion.h1 
-        className="font-headline text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-primary"
+        className="font-headline text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-primary break-words w-full"
         style={{ textShadow: '0 0 8px hsl(var(--primary) / 0.8), 0 0 24px hsl(var(--primary) / 0.6)' }}
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ export const SalesPageHero = () => (
         />
     </motion.div>
     
-    <motion.p variants={itemVariants} className="text-lg md:text-xl text-neutral-200/90 max-w-3xl pt-8 leading-relaxed">
+    <motion.p variants={itemVariants} className="text-lg md:text-xl text-neutral-200/90 max-w-3xl pt-8 leading-relaxed text-center break-words">
       Acesso liberado a uma coleção de materiais restritos, raros e privados. O que você verá aqui não pode ser encontrado em nenhum outro lugar.
     </motion.p>
     <motion.div variants={itemVariants} className="pt-8 w-full max-w-md pointer-events-auto">
