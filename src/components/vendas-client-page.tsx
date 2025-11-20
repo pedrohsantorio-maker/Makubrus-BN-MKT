@@ -2,25 +2,18 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CountdownTimer } from '@/components/countdown-timer';
 import { MotionButton } from '@/components/motion-button';
 import { logEvent } from '@/lib/firebase';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
 import { ShieldAlert } from 'lucide-react';
 import { SalesPageHero } from '@/components/sales-page-hero';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 
-interface FeatureCard {
-    title: string;
-    description: string;
-    image?: ImagePlaceholder;
-}
-
 interface VendasClientPageProps {
-    featureCards: FeatureCard[];
+    carouselImages: ImagePlaceholder[];
 }
 
 const containerVariants = {
@@ -39,16 +32,17 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
 };
 
-export function VendasClientPage({ featureCards }: VendasClientPageProps) {
+export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
   const autoplayOptions = {
-    delay: 2500,
+    delay: 2000,
     stopOnInteraction: true,
     stopOnMouseEnter: true,
   };
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, dragFree: true }, [Autoplay(autoplayOptions)]);
+  const [emblaRef] = useEmblaCarousel({ loop: true, dragFree: true }, [Autoplay(autoplayOptions)]);
   
-  const duplicatedCards = [...featureCards, ...featureCards, ...featureCards];
+  // Duplicate images for a seamless infinite loop effect
+  const duplicatedImages = [...carouselImages, ...carouselImages, ...carouselImages];
 
   return (
     <div className="bg-transparent text-white min-h-screen overflow-x-hidden">
@@ -76,27 +70,17 @@ export function VendasClientPage({ featureCards }: VendasClientPageProps) {
         <section className="py-20 w-full">
           <div className="carousel-wrapper" ref={emblaRef}>
             <div className="carousel-track">
-              {duplicatedCards.map((card, index) => (
+              {duplicatedImages.map((image, index) => (
                 <div key={index} className="carousel-item group">
-                   <div className="carousel-item-content">
-                      <CardHeader className="p-0 mb-4">
-                        {card.image && (
-                           <div className="aspect-video w-full overflow-hidden rounded-md border border-white/10">
-                              <Image
-                              src={card.image.imageUrl}
-                              alt={card.image.description}
-                              width={600}
-                              height={400}
-                              data-ai-hint={card.image.imageHint}
-                              className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-110"
-                              />
-                           </div>
-                        )}
-                      </CardHeader>
-                      <CardContent className="flex-grow p-0">
-                        <CardTitle className="font-headline text-2xl mb-2 text-neutral-100 group-hover:text-white">{card.title}</CardTitle>
-                        <p className="text-neutral-400 group-hover:text-neutral-300">{card.description}</p>
-                      </CardContent>
+                   <div className="carousel-item-content p-0 overflow-hidden">
+                      <Image
+                        src={image.imageUrl}
+                        alt={image.description}
+                        width={600}
+                        height={400}
+                        data-ai-hint={image.imageHint}
+                        className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-110 group-hover:brightness-110"
+                      />
                    </div>
                 </div>
               ))}
