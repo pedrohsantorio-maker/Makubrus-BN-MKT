@@ -101,7 +101,15 @@ export function VslClientPage() {
             className="w-full aspect-video bg-black border border-primary/20 rounded-lg flex items-center justify-center shadow-[0_0_30px_rgba(255,0,0,0.2)] p-1"
           >
             <div className="w-full h-full bg-black flex items-center justify-center rounded-md">
-              <p className="text-muted-foreground font-code">VSL Player Placeholder</p>
+              <video
+                controls
+                className="w-full h-full rounded-md"
+                // Substitua a URL abaixo pela URL do seu vídeo
+                src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-video.mp4"
+                autoPlay
+                muted
+                loop
+              />
             </div>
           </motion.div>
           
