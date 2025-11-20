@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -116,7 +117,7 @@
   .skull-icon {
     filter:
       drop-shadow(0 0 12px rgba(255, 0, 0, 0.9));
-    transition: transform 0.25s ease, filter 0.25s ease;
+    transition: transform 0.3s ease, filter 0.3s ease;
   }
   .skull-icon:hover {
     transform: scale(1.05);
@@ -239,3 +240,12 @@
     transform: translateY(200%);
   }
 }
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.7; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 4s infinite ease-in-out;
+}
+

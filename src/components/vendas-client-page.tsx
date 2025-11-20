@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from 'next/image';
@@ -6,11 +7,12 @@ import { CountdownTimer } from '@/components/countdown-timer';
 import { MotionButton } from '@/components/motion-button';
 import { logEvent } from '@/lib/firebase';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert, Users } from 'lucide-react';
 import { SalesPageHero } from '@/components/sales-page-hero';
 import React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
+import {useEffect, useState} from 'react';
 
 interface VendasClientPageProps {
     carouselImages: ImagePlaceholder[];
@@ -36,6 +38,21 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
   const [emblaRef] = useEmblaCarousel({ loop: true, dragFree: true }, [Autoplay(autoplayOptions)]);
   
   const duplicatedImages = [...carouselImages, ...carouselImages, ...carouselImages];
+
+  const [vagas, setVagas] = useState(5);
+
+  useEffect(() => {
+    if (vagas === 0) return;
+
+    const randomTimeout = Math.random() * (15000 - 5000) + 5000; // entre 5 e 15 segundos
+
+    const interval = setTimeout(() => {
+      setVagas((v) => Math.max(0, v - 1));
+    }, randomTimeout);
+
+    return () => clearTimeout(interval);
+  }, [vagas]);
+
 
   return (
     <div className="bg-transparent text-white min-h-screen overflow-x-hidden">
@@ -131,7 +148,33 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
                 </MotionButton>
             </motion.div>
         </motion.section>
+
+        <motion.div
+          className="relative max-w-md mx-auto mt-8 mb-12 px-4"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.8 }}
+          transition={{ duration: 0.7 }}
+        >
+            <div className="relative rounded-lg border-2 border-primary/50 bg-primary/10 px-6 py-4 text-center shadow-[0_0_30px_hsl(var(--primary)/0.4)]">
+                <div className="absolute -top-3 -left-3 -right-3 -bottom-3 animate-pulse-slow rounded-lg border-2 border-primary/30 blur-sm"></div>
+                <div className="flex items-center justify-center gap-4">
+                    <Users className="h-8 w-8 text-primary animate-flicker" />
+                    <div className="text-left">
+                        <p className="font-bold text-white text-lg tracking-wide">ÚLTIMAS VAGAS DISPONÍVEIS</p>
+                        <div className="flex items-baseline gap-2">
+                           <span className="font-headline text-4xl font-bold text-primary animate-flicker" style={{textShadow: '0 0 10px hsl(var(--primary))'}}>
+                             {vagas}
+                           </span>
+                           <span className="text-muted-foreground font-medium text-base">vagas restantes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </motion.div>
+
       </main>
     </div>
   );
 }
+
