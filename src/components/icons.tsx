@@ -6,21 +6,19 @@ import { motion } from 'framer-motion';
 
 export function SkullCrossbonesIcon({ size = 48, className }: { size?: number, className?: string }) {
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <motion.div
+    <motion.div
         animate={{ scale: [1, 1.05, 1], opacity: [1, 0.9, 1] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ filter: 'drop-shadow(0 0 10px hsl(var(--primary)))' }}
+        className="flex justify-center"
       >
-        <Image
-          src="https://i.imgur.com/jaFYlYE.png"
-          alt="Ícone de caveira"
-          width={size}
-          height={size}
-          className={className}
-        />
-      </motion.div>
-    </div>
+      <Image
+        src="https://i.imgur.com/jaFYlYE.png"
+        alt="Ícone de caveira"
+        width={size}
+        height={size}
+        className="skull-icon"
+      />
+    </motion.div>
   );
 }
 
