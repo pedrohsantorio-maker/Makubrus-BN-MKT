@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { SkullCrossbonesIcon } from '@/components/icons';
+import { SkullIcon } from '@/components/SkullIcon';
 import { logEvent } from '@/lib/firebase';
 
 export function AgeGateClient() {
@@ -45,10 +45,10 @@ export function AgeGateClient() {
       
       <motion.div variants={itemVariants} className="relative z-30">
         <div className="flex justify-center mb-6">
-          <SkullCrossbonesIcon
-            size={64}
-            className="text-primary drop-shadow-[0_0_20px_rgba(248,113,113,0.85)]"
-          />
+           <SkullIcon
+              size={56}
+              className="text-primary drop-shadow-[0_0_20px_rgba(255,0,0,0.9)]"
+            />
         </div>
       </motion.div>
       <motion.h1

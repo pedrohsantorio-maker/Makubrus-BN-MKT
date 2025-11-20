@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CountdownTimer } from '@/components/countdown-timer';
-import { Icon18Plus, SkullCrossbonesIcon } from '@/components/icons';
+import { Icon18Plus } from '@/components/icons';
+import { SkullIcon } from '@/components/SkullIcon';
 import { MotionButton } from '@/components/motion-button';
 import { logEvent } from '@/lib/firebase';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
@@ -66,7 +67,7 @@ const SalesPageHero = () => (
         variants={itemVariants}
         className="pt-2"
       >
-        <SkullCrossbonesIcon size={48} className="text-white/80 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
+        <SkullIcon size={48} className="text-white/80 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
     </motion.div>
     
     <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl pt-8">
