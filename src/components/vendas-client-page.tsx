@@ -74,7 +74,7 @@ const SalesPageHero = () => (
     <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl pt-8">
       Acesso liberado a uma coleção de materiais restritos, raros e privados. O que você verá aqui não pode ser encontrado em nenhum outro lugar.
     </motion.p>
-    <motion.div variants={itemVariants} className="pt-8 w-full max-w-lg">
+    <motion.div variants={itemVariants} className="pt-8 w-full max-w-lg pointer-events-auto">
       <MotionButton onClick={() => logEvent('main_cta_click', { placement: 'hero' })} pulse>
         GARANTIR ACESSO VITALÍCIO
       </MotionButton>
@@ -85,7 +85,7 @@ const SalesPageHero = () => (
 
 export function VendasClientPage({ featureCards }: VendasClientPageProps) {
   return (
-    <div className="bg-transparent text-white min-h-screen overflow-x-hidden pointer-events-none">
+    <div className="bg-transparent text-white min-h-screen overflow-x-hidden">
        <div className="radial-gradient-overlay pointer-events-none"></div>
        <div className="vignette-overlay pointer-events-none"></div>
        <div className="noise-overlay pointer-events-none"></div>
@@ -104,7 +104,7 @@ export function VendasClientPage({ featureCards }: VendasClientPageProps) {
         </div>
       </motion.header>
 
-      <main className="pt-24 pb-16 px-4 md:px-8 relative z-10 pointer-events-auto">
+      <main className="pt-24 pb-16 px-4 md:px-8 relative z-10">
         <SalesPageHero />
 
         <motion.section 

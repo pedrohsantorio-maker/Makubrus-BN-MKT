@@ -1,26 +1,31 @@
 import type { SVGProps } from 'react';
 
-export function SkullCrossbonesIcon(props: SVGProps<SVGSVGElement>) {
+export function SkullCrossbonesIcon({ size = 48, className, ...props }: SVGProps<SVGSVGElement> & { size?: number }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="48"
-      height="48"
-      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      className={className}
       {...props}
     >
-      <path d="M12.5 2.5a2 2 0 0 0-1 0L4 5.5v5c0 4.2 3.4 9 8 9s8-4.8 8-9v-5l-7.5-3Z" />
-      <path d="M8 11.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
-      <path d="M16 11.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
-      <path d="m13.5 15.5.5-1h-4l.5 1" />
-      <path d="M7 21h10" />
-      <path d="m8.5 18-2 3" />
-      <path d="m15.5 18 2 3" />
+      <path d="M46 40L18 58" />
+      <path d="M18 40L46 58" />
+      <circle cx="24" cy="58" r="4" />
+      <circle cx="40" cy="58" r="4" />
+      <circle cx="24" cy="40" r="4" />
+      <circle cx="40" cy="40" r="4" />
+      <path d="M20 32c0-8.837 5.373-16 12-16s12 7.163 12 16" />
+      <rect x="25" y="32" width="14" height="6" rx="2" />
+      <circle cx="25" cy="24" r="3" />
+      <circle cx="39" cy="24" r="3" />
+      <path d="M32 16a12 12 0 01-12 12M32 16a12 12 0 0012 12" />
     </svg>
   );
 }

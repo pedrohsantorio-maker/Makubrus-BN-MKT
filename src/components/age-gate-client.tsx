@@ -36,14 +36,14 @@ export function AgeGateClient() {
 
   return (
     <motion.div 
-      className="relative z-20 flex flex-col items-center justify-center text-center text-white space-y-8 p-8 border border-white/10 bg-black/30 rounded-lg shadow-2xl shadow-primary/10 backdrop-blur-sm pointer-events-auto"
+      className="relative z-20 flex flex-col items-center justify-center text-center text-white space-y-8 p-8 border border-white/10 bg-black/30 rounded-lg shadow-2xl shadow-primary/10 backdrop-blur-sm"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/30 to-primary/10 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
       
-      <motion.div variants={itemVariants} className="pointer-events-auto relative z-30">
+      <motion.div variants={itemVariants} className="relative z-30">
         <motion.div
             animate={{ scale: [1, 1.05, 1], opacity: [1, 0.9, 1] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
