@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from 'react';
@@ -104,7 +105,7 @@ export function VslClientPage() {
               <video
                 controls
                 className="w-full h-full rounded-md"
-                src="https://screenapp.io/app/v/3_qqJHrmVi"
+                src="https://streamable.com/e/23mw7w"
                 autoPlay
                 muted
                 loop
