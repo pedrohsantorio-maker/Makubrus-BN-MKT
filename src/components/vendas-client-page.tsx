@@ -4,12 +4,12 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CountdownTimer } from '@/components/countdown-timer';
-import { Icon18Plus } from '@/components/icons';
 import { SkullIcon } from '@/components/SkullIcon';
 import { MotionButton } from '@/components/motion-button';
 import { logEvent } from '@/lib/firebase';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
 import { ShieldAlert } from 'lucide-react';
+import { SalesPageHero } from '@/components/sales-page-hero';
 
 interface FeatureCard {
     title: string;
@@ -36,51 +36,6 @@ const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
 };
-
-const SalesPageHero = () => (
-  <motion.section 
-    className="text-center flex flex-col items-center space-y-4 min-h-[70vh] justify-center"
-    initial="hidden"
-    animate="visible"
-    variants={containerVariants}
-  >
-    <motion.div 
-      variants={itemVariants} 
-      className="flex items-center justify-center gap-4"
-    >
-      <Icon18Plus className="w-8 h-8 text-primary animate-pulse drop-shadow-[0_0_8px_hsl(var(--primary))]" />
-      <h1 
-        className="font-headline text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-primary"
-        style={{ textShadow: '0 0 5px hsl(var(--primary)), 0 0 15px hsl(var(--primary))' }}
-      >
-        MAK4BRUS OCULTOS
-      </h1>
-      <Icon18Plus className="w-8 h-8 text-primary animate-pulse drop-shadow-[0_0_8px_hsl(var(--primary))]" />
-    </motion.div>
-    
-    <motion.div variants={itemVariants} className="text-center text-muted-foreground font-code">
-      <p className="text-lg">Conteúdo Raro ⚠️</p>
-      <p className="text-base opacity-70">Não divulgue</p>
-    </motion.div>
-
-    <motion.div
-        variants={itemVariants}
-        className="pt-2"
-      >
-        <SkullIcon size={48} className="text-white/80 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
-    </motion.div>
-    
-    <motion.p variants={itemVariants} className="text-xl md:text-2xl text-muted-foreground max-w-3xl pt-8">
-      Acesso liberado a uma coleção de materiais restritos, raros e privados. O que você verá aqui não pode ser encontrado em nenhum outro lugar.
-    </motion.p>
-    <motion.div variants={itemVariants} className="pt-8 w-full max-w-lg pointer-events-auto">
-      <MotionButton onClick={() => logEvent('main_cta_click', { placement: 'hero' })} pulse>
-        GARANTIR ACESSO VITALÍCIO
-      </MotionButton>
-    </motion.div>
-  </motion.section>
-);
-
 
 export function VendasClientPage({ featureCards }: VendasClientPageProps) {
   return (
