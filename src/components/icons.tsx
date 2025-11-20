@@ -13,7 +13,7 @@ export function SkullCrossbonesIcon({
 }: SkullProps) {
   return (
     <motion.div
-      animate={{ scale: [1, 1.05, 1], opacity: [1, 0.95, 1] }}
+      animate={{ scale: [1, 1.02, 1], opacity: [1, 0.95, 1] }}
       transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
       className="flex justify-center"
       style={{ width: size, height: size }}
@@ -26,34 +26,34 @@ export function SkullCrossbonesIcon({
         className={className}
         fill="none"
         stroke="currentColor"
-        strokeWidth={2}
+        strokeWidth={2.2}
         strokeLinecap="round"
         strokeLinejoin="round"
       >
         {/* Ossos Cruzados */}
-        <path d="M16 48 L48 16" />
-        <path d="M18 14 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
-        <path d="M54 46 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
-        <path d="M16 16 L48 48" />
-        <path d="M18 50 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
-        <path d="M54 18 a4 4 0 1 0 -8 0 a4 4 0 1 0 8 0z" />
+        <path d="M14 50 L50 14" />
+        <path d="M12 12.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(45 10 12.5)" />
+        <path d="M58 51.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(45 54 51.5)" />
+        <path d="M14 14 L50 50" />
+        <path d="M12 51.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(-45 10 51.5)" />
+        <path d="M58 12.5a4 4 0 1 0 -8 0a4 4 0 1 0 8 0z" transform="rotate(-45 54 12.5)" />
         
         {/* Cabeça da Caveira */}
-        <path d="M32 6 C 18 6, 12 18, 12 28 C 12 40, 18 46, 32 46 C 46 46, 52 40, 52 28 C 52 18, 46 6, 32 6 Z" />
+        <path d="M32 8 C 18 8, 12 20, 12 30 C 12 42, 18 50, 32 50 C 46 50, 52 42, 52 30 C 52 20, 46 8, 32 8 Z" />
         
         {/* Olhos */}
-        <circle cx="24" cy="26" r="4" />
-        <circle cx="40" cy="26" r="4" />
+        <circle cx="24" cy="28" r="5" />
+        <circle cx="40" cy="28" r="5" />
         
         {/* Nariz */}
-        <path d="M32 32 L 29 38 L 35 38 Z" />
+        <path d="M32 34 L 29 40 L 35 40 Z" />
 
         {/* Dentes */}
-        <path d="M22 46 V 42" />
-        <path d="M27 46 V 42" />
-        <path d="M32 46 V 42" />
-        <path d="M37 46 V 42" />
-        <path d="M42 46 V 42" />
+        <path d="M22 50 V 45" />
+        <path d="M27 50 V 45" />
+        <path d="M32 50 V 45" />
+        <path d="M37 50 V 45" />
+        <path d="M42 50 V 45" />
       </svg>
     </motion.div>
   );
