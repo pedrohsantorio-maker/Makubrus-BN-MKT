@@ -4,8 +4,8 @@ export function SkullCrossbonesIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="48"
+      height="48"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -14,12 +14,13 @@ export function SkullCrossbonesIcon(props: SVGProps<SVGSVGElement>) {
       strokeLinejoin="round"
       {...props}
     >
+      <path d="M12.5 2.5a2 2 0 0 0-1 0L4 5.5v5c0 4.2 3.4 9 8 9s8-4.8 8-9v-5l-7.5-3Z" />
+      <path d="M8 11.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
+      <path d="M16 11.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
+      <path d="m13.5 15.5.5-1h-4l.5 1" />
       <path d="M7 21h10" />
-      <path d="M12 21v-3" />
-      <path d="M12 18c-3.87 0-7-3.13-7-7a7 7 0 0 1 14 0c0 3.87-3.13 7-7 7Z" />
-      <path d="M9.5 12a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
-      <path d="M15.5 12a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
-      <path d="M12 15h.01" />
+      <path d="m8.5 18-2 3" />
+      <path d="m15.5 18 2 3" />
     </svg>
   );
 }
