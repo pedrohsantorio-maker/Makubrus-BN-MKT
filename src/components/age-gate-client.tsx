@@ -41,7 +41,7 @@ export function AgeGateClient() {
       initial="hidden"
       animate="visible"
     >
-      <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-primary/30 to-primary/10 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 pointer-events-none"></div>
+      <div className="absolute pointer-events-none -inset-0.5 rounded-lg bg-gradient-to-r from-primary/30 to-primary/10 blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
       
       <motion.div variants={itemVariants} className="relative z-30">
         <motion.div
