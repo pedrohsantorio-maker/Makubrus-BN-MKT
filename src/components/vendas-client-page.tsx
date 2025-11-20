@@ -58,8 +58,8 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
-                      width={600}
-                      height={400}
+                      width={300}
+                      height={260}
                       data-ai-hint={image.imageHint}
                       className="carousel-image w-full h-full object-contain"
                     />
@@ -70,7 +70,7 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
         </section>
         
         <motion.section 
-            className="text-center flex flex-col items-center space-y-6 pt-16 px-4 md:px-8"
+            className="text-center flex flex-col items-center space-y-6 pt-16 px-4 md:px-8 pb-10"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.5 }}
