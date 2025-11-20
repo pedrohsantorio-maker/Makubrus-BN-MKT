@@ -148,7 +148,6 @@
   .carousel-item {
     @apply relative flex items-center justify-center flex-shrink-0 bg-black/60 rounded-xl border border-white/5 backdrop-blur-sm transition-all duration-500 overflow-hidden p-3 shadow-lg;
     @apply min-w-[220px] sm:min-w-[260px] md:min-w-[300px];
-    max-height: 380px;
     animation: pulseGlow 4s infinite ease-in-out;
     perspective: 1000px;
     transform-style: preserve-3d;
@@ -157,7 +156,7 @@
     @apply scale-[1.03] shadow-[0_0_40px_rgba(255,0,0,0.4)];
   }
   .carousel-image {
-    @apply w-full h-full object-contain transition-transform duration-500 ease-out;
+    @apply block w-full h-auto object-contain transition-transform duration-500 ease-out;
   }
   .carousel-item:hover .carousel-image {
     transform: scale(1.06);

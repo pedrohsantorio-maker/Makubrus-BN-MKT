@@ -70,8 +70,8 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
           <div className="carousel-wrapper" ref={emblaRef}>
             <div className="carousel-track">
               {duplicatedImages.map((image, index) => (
-                <div key={index} className="carousel-item group">
-                   <Image
+                 <div key={index} className="carousel-item">
+                    <Image
                       src={image.imageUrl}
                       alt={image.description}
                       width={600}
@@ -79,7 +79,7 @@ export function VendasClientPage({ carouselImages }: VendasClientPageProps) {
                       data-ai-hint={image.imageHint}
                       className="carousel-image"
                     />
-                </div>
+                 </div>
               ))}
             </div>
           </div>
