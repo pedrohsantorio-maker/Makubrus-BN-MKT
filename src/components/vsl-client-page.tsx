@@ -105,7 +105,7 @@ export function VslClientPage() {
               <video
                 controls
                 className="w-full h-full rounded-md"
-                src="https://streamable.com/e/23mw7w"
+                src="https://i.imgur.com/1UUPryn.mp4"
                 autoPlay
                 muted
                 loop
