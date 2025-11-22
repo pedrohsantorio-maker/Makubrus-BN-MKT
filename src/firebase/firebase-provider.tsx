@@ -55,8 +55,9 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const unsubscribeEvents = onSnapshot(eventsQuery, (snapshot) => {
-        const events = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        const uniqueSessionIds = (eventName: string | string[]) => {
+        const events = snapshot.docs.map(doc => ({ ...(doc.data() as { name: string; sessionId: string; createdAt: Timestamp }), id: doc.id }));
+        
+        const uniqueSessionIdsForEvent = (eventName: string | string[]) => {
             const names = Array.isArray(eventName) ? eventName : [eventName];
             return new Set(
                 events
@@ -73,16 +74,16 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
                 .map(e => e.sessionId)
         );
 
-        // --- Leads Last 24h (viewed VSL) ---
-        const leads24h = uniqueSessionIds("view_vsl");
+        // --- Leads Last 24h (started loading) ---
+        const leads24h = uniqueSessionIdsForEvent("loading_started");
 
         // --- Total Conversions (clicked final CTA) ---
-        const totalConversions = uniqueSessionIds(["main_cta_click", "final_cta_click"]);
+        const totalConversionsSet = uniqueSessionIdsForEvent(["main_cta_click", "final_cta_click"]);
 
         // --- Funnel Data ---
-        const funnelStep1 = uniqueSessionIds("age_gate");
-        const funnelStep2 = uniqueSessionIds("view_vsl");
-        const funnelStep3 = totalConversions;
+        const funnelStep1 = uniqueSessionIdsForEvent("age_gate");
+        const funnelStep2 = uniqueSessionIdsForEvent("view_vsl");
+        const funnelStep3 = totalConversionsSet;
 
         const funnelData = [
           { stage: "Visitas na Age Gate", value: funnelStep1.size, conversion: 100 },
@@ -95,7 +96,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
             ...prev,
             activeLeads: activeUsers.size,
             leadsLast24h: leads24h.size,
-            totalConversions: totalConversions.size,
+            totalConversions: totalConversionsSet.size,
             funnelData,
             loading: false, // Data has been loaded
         }));
@@ -110,12 +111,15 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const unsubscribeRecentLeads = onSnapshot(recentLeadsQuery, (snapshot) => {
-        const leads = snapshot.docs.map(doc => ({
-            id: doc.id,
-            sessionId: doc.data().sessionId,
-            createdAt: doc.data().createdAt,
-        }));
-        setAnalyticsData(prev => ({ ...prev, recentLeads: leads, loading: false }));
+        const leads = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                sessionId: data.sessionId || 'N/A',
+                createdAt: data.createdAt || Timestamp.now(),
+            };
+        });
+        setAnalyticsData(prev => ({ ...prev, recentLeads: leads, loading: prev.loading }));
     });
 
 
