@@ -81,9 +81,9 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         const leads24h = uniqueSessionIdsForEvent("loading_started");
         const totalConversionsSet = uniqueSessionIdsForEvent(["main_cta_click", "final_cta_click"]);
 
-        const funnelStep1 = uniqueSessionIdsForEvent("age_gate");
+        const funnelStep1 = uniqueSessionIdsForEvent("age_gate_view");
         const funnelStep2 = uniqueSessionIdsForEvent("view_vsl");
-        const funnelStep3 = uniqueSessionIdsForEvent("cta_click");
+        const funnelStep3 = uniqueSessionIdsForEvent(["main_cta_click", "final_cta_click"]);
 
         const funnelData = [
           { stage: "Visitas na Age Gate", value: funnelStep1.size, conversion: 100 },
@@ -122,7 +122,6 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         setAnalyticsData(prev => ({ 
             ...prev, 
             recentLeads: leads, 
-            loading: prev.loading, // Keep original loading state
             lastUpdatedAt: new Date()
         }));
     });

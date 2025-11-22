@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,10 @@ import { logEvent } from '@/lib/firebase';
 
 export function AgeGateClient() {
   const router = useRouter();
+
+  useEffect(() => {
+    logEvent("age_gate_view");
+  }, []);
 
   const handleAdult = () => {
     logEvent("age_gate", { result: "adult" });
