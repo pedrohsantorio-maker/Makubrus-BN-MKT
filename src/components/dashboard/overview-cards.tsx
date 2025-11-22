@@ -2,15 +2,18 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, DollarSign, Activity, CreditCard } from 'lucide-react';
-
-const overviewData = [
-    { title: "Leads (24h)", value: "+1,234", change: "+15.2% from last 24h", icon: Users },
-    { title: "Conversões", value: "+213", change: "+12.1% from last 24h", icon: CreditCard },
-    { title: "Ticket Médio", value: "R$ 49,90", change: "+5.3%", icon: DollarSign },
-    { title: "Leads Ativos Agora", value: "89", change: "Em tempo real", icon: Activity },
-]
+import { useAnalytics } from '@/firebase/firebase-provider';
 
 export function OverviewCards() {
+  const { activeLeads, leadsLast24h, totalConversions, averageTicket } = useAnalytics();
+
+  const overviewData = [
+    { title: "Leads (24h)", value: `+${leadsLast24h}`, change: "from last 24h", icon: Users },
+    { title: "Conversões", value: `+${totalConversions}`, change: "total", icon: CreditCard },
+    { title: "Ticket Médio", value: `R$ ${averageTicket.toFixed(2)}`, change: "estimado", icon: DollarSign },
+    { title: "Leads Ativos Agora", value: `${activeLeads}`, change: "Em tempo real", icon: Activity },
+  ]
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {overviewData.map((item, index) => (

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { initializeApp, getApps, type FirebaseOptions } from 'firebase/app';
@@ -22,15 +23,38 @@ if (!getApps().length) {
 }
 
 let analytics;
-let firestore;
+export let firestore: any; // Allow export
 
 if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app);
-  firestore = getFirestore(app);
+  try {
+    analytics = getAnalytics(app);
+  } catch (e) {
+    console.error("Failed to initialize Analytics", e);
+  }
+  try {
+    firestore = getFirestore(app);
+  } catch(e) {
+    console.error("Failed to initialize Firestore", e);
+  }
 }
 
+// Simple session ID generator
+const getSessionId = () => {
+    if (typeof window !== 'undefined') {
+        let sessionId = sessionStorage.getItem('sessionId');
+        if (!sessionId) {
+            sessionId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+            sessionStorage.setItem('sessionId', sessionId);
+        }
+        return sessionId;
+    }
+    return null;
+}
+
+
 export const logEvent = (eventName: string, params?: { [key: string]: any }) => {
-  console.log(`[Analytics Event]: ${eventName}`, params);
+  const sessionId = getSessionId();
+  console.log(`[Analytics Event]: ${eventName}`, { ...params, sessionId });
   if (analytics) {
     firebaseLogEvent(analytics, eventName, params);
   }
@@ -41,7 +65,7 @@ export const logEvent = (eventName: string, params?: { [key: string]: any }) => 
       name: eventName,
       params: params || {},
       createdAt: serverTimestamp(),
-      // You could add more context here, like user ID, session ID, etc.
+      sessionId: sessionId,
     }).catch(error => {
       console.error("Error writing event to Firestore: ", error);
     });
