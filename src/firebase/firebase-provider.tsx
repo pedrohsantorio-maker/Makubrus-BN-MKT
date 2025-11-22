@@ -34,7 +34,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
     leadsLast24h: 0,
     totalConversions: 0,
     funnelData: [
-      { stage: "Visitas Iniciais", value: 0, conversion: 100 },
+      { stage: "Visitas na Age Gate", value: 0, conversion: 100 },
       { stage: "Visualizaram VSL", value: 0, conversion: 0 },
       { stage: "Cliques no CTA (Vendas)", value: 0, conversion: 0 },
     ],
@@ -70,15 +70,16 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
       const activeSessionIds = new Set<string>();
       events.forEach(e => {
+        // The createdAt is now an object with seconds and nanoseconds
         if (e.name === 'session_heartbeat' && e.createdAt.toDate() > fiveMinutesAgo) {
           activeSessionIds.add(e.sessionId);
         }
       });
 
       // --- Calculate Funnel Data ---
-      const funnelStep1_visits = getUniqueSessionIds('page_view');
+      const funnelStep1_visits = getUniqueSessionIds('age_gate_view');
       const funnelStep2_vsl_views = getUniqueSessionIds('vsl_view');
-      const funnelStep3_cta_clicks = getUniqueSessionIds(['main_cta_click', 'final_cta_click']);
+      const funnelStep3_cta_clicks = getUniqueSessionIds(['main_cta_click', 'final_cta_click', 'vsl_page_cta']);
       
       const funnelData = [
         { 

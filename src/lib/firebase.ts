@@ -2,7 +2,7 @@
 'use client';
 
 import { initializeApp, getApps, type FirebaseOptions } from 'firebase/app';
-import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore';
 import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
 
 const firebaseConfig: FirebaseOptions = {
@@ -32,7 +32,7 @@ if (hasAllFirebaseConfigValues) {
 }
 
 let analytics;
-export let firestore: any; // Allow export
+export let firestore: any; 
 
 if (typeof window !== 'undefined' && app) {
   try {
@@ -115,7 +115,7 @@ export const logEvent = (eventName: string, payload: { [key: string]: any } = {}
     },
     source: getSourceInfo(),
     device: getDeviceInfo(),
-    createdAt: serverTimestamp(),
+    createdAt: Timestamp.fromDate(new Date()), // Use client-side timestamp
   };
 
   if (process.env.NODE_ENV === 'development') {
