@@ -23,6 +23,7 @@ export function LeadHistoryTable() {
             <Table>
                 <TableHeader>
                     <TableRow>
+                    <TableHead className="w-[50px]">#</TableHead>
                     <TableHead>Lead</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Origem</TableHead>
@@ -31,6 +32,9 @@ export function LeadHistoryTable() {
                 <TableBody>
                     {leadHistory.map((lead, index) => (
                     <TableRow key={index}>
+                        <TableCell className="font-medium text-muted-foreground">
+                            {(index + 1).toString().padStart(2, '0')}
+                        </TableCell>
                         <TableCell>
                             <div className="font-medium">{lead.name}</div>
                             <div className="text-xs text-muted-foreground">{lead.email}</div>
