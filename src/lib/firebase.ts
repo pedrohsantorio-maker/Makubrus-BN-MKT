@@ -2,6 +2,7 @@
 
 import { initializeApp, getApps, type FirebaseOptions } from 'firebase/app';
 import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -20,16 +21,29 @@ if (!getApps().length) {
   app = getApps()[0];
 }
 
-
 let analytics;
+let firestore;
+
 if (typeof window !== 'undefined') {
-    analytics = getAnalytics(app);
+  analytics = getAnalytics(app);
+  firestore = getFirestore(app);
 }
 
-
 export const logEvent = (eventName: string, params?: { [key: string]: any }) => {
-  console.log(`[Firebase Analytics] Event: ${eventName}`, params);
+  console.log(`[Analytics Event]: ${eventName}`, params);
   if (analytics) {
     firebaseLogEvent(analytics, eventName, params);
+  }
+
+  if (firestore) {
+    const eventsCollection = collection(firestore, 'events');
+    addDoc(eventsCollection, {
+      name: eventName,
+      params: params || {},
+      createdAt: serverTimestamp(),
+      // You could add more context here, like user ID, session ID, etc.
+    }).catch(error => {
+      console.error("Error writing event to Firestore: ", error);
+    });
   }
 };
