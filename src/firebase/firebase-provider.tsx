@@ -9,14 +9,12 @@ interface AnalyticsData {
   activeLeads: number;
   leadsLast24h: number;
   totalConversions: number;
-  averageTicket: number;
 }
 
 const AnalyticsContext = createContext<AnalyticsData>({
   activeLeads: 0,
   leadsLast24h: 0,
   totalConversions: 0,
-  averageTicket: 49.90,
 });
 
 export const useAnalytics = () => useContext(AnalyticsContext);
@@ -26,11 +24,13 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
     activeLeads: 0,
     leadsLast24h: 0,
     totalConversions: 0,
-    averageTicket: 49.90,
   });
 
   useEffect(() => {
-    if (!firestore) return;
+    if (!firestore) {
+        console.warn("Firestore is not initialized. Real-time analytics will be disabled.");
+        return;
+    };
 
     // --- Active Leads (last 5 minutes) ---
     const activeLeadsQuery = query(

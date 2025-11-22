@@ -1,21 +1,20 @@
 
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, DollarSign, Activity, CreditCard } from 'lucide-react';
+import { Users, Activity, CreditCard } from 'lucide-react';
 import { useAnalytics } from '@/firebase/firebase-provider';
 
 export function OverviewCards() {
-  const { activeLeads, leadsLast24h, totalConversions, averageTicket } = useAnalytics();
+  const { activeLeads, leadsLast24h, totalConversions } = useAnalytics();
 
   const overviewData = [
     { title: "Leads (24h)", value: `+${leadsLast24h}`, change: "from last 24h", icon: Users },
     { title: "Conversões", value: `+${totalConversions}`, change: "total", icon: CreditCard },
-    { title: "Ticket Médio", value: `R$ ${averageTicket.toFixed(2)}`, change: "estimado", icon: DollarSign },
     { title: "Leads Ativos Agora", value: `${activeLeads}`, change: "Em tempo real", icon: Activity },
   ]
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {overviewData.map((item, index) => (
             <Card key={index}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
