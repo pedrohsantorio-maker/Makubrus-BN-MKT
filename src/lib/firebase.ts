@@ -99,7 +99,12 @@ const getDeviceInfo = () => {
 // 4. Central Event Logging Function
 export const logEvent = (eventName: string, payload: { [key: string]: any } = {}) => {
   const currentSessionId = getSessionId();
-  if (!currentSessionId) return;
+  if (!currentSessionId || !firestore) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("Firestore not ready or no session ID, skipping event log.", { hasFirestore: !!firestore, currentSessionId });
+      }
+      return;
+  }
 
   const eventData = {
     sessionId: currentSessionId,
@@ -117,21 +122,9 @@ export const logEvent = (eventName: string, payload: { [key: string]: any } = {}
     console.log(`[EVENT]: ${eventName}`, eventData);
   }
 
-  if (!hasAllFirebaseConfigValues) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn("Firebase not configured, skipping event logging.");
-    }
-    return;
-  }
-
-  // Send to our own API endpoint instead of directly to Firestore
-  fetch('/api/events', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(eventData),
-    keepalive: true, // Ensures request is sent even if page is closing
-  }).catch(error => {
-    console.error("Error sending event to API: ", error);
+  // Send directly to Firestore
+  addDoc(collection(firestore, "events"), eventData).catch(error => {
+    console.error("Error writing event to Firestore: ", error);
   });
 
   // Also log to Google Analytics if available
