@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Check, ShieldCheck } from 'lucide-react';
@@ -38,7 +38,6 @@ const benefitItemVariant = {
   visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' } },
 };
 
-
 const benefits = [
     "Conteúdo Oculto & Ultra-Restrito 🔥",
     "Arquivos Secretos da Deep Web (Acesso Adulto) 🜁",
@@ -49,13 +48,38 @@ const benefits = [
 
 export function VslClientPage() {
   const router = useRouter();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const timeWatched = useRef(0);
 
   useEffect(() => {
-    logEvent("view_vsl");
+    logEvent("vsl_view");
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    const interval = setInterval(() => {
+      if (!video.paused) {
+        timeWatched.current += 1;
+      }
+    }, 1000);
+
+    const handleBeforeUnload = () => {
+      logEvent('vsl_watch_time', { watchTimeSeconds: timeWatched.current });
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (timeWatched.current > 0) {
+        logEvent('vsl_watch_time', { watchTimeSeconds: timeWatched.current });
+      }
+    };
   }, []);
 
   const handleCtaClick = () => {
-    logEvent("click_vsl_cta");
+    logEvent("cta_click", { placement: "vsl_page_cta" });
     router.push('/vendas');
   };
 
@@ -103,6 +127,7 @@ export function VslClientPage() {
           >
             <div className="w-full h-full bg-black flex items-center justify-center rounded-md">
               <video
+                ref={videoRef}
                 controls
                 className="w-full h-full rounded-md"
                 src="https://i.imgur.com/1UUPryn.mp4"

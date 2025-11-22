@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from 'react';
@@ -11,16 +12,17 @@ export function AgeGateClient() {
   const router = useRouter();
 
   useEffect(() => {
-    logEvent("age_gate_view");
+    // This is the first event, tracking the initial visit.
+    logEvent("page_view", { title: "Age Gate" });
   }, []);
 
   const handleAdult = () => {
-    logEvent("age_gate", { result: "adult" });
+    logEvent("age_gate_confirm", { result: "adult" });
     router.push('/carregando');
   };
 
   const handleMinor = () => {
-    logEvent("age_gate", { result: "minor" });
+    logEvent("age_gate_confirm", { result: "minor" });
     router.push('/acesso-negado');
   };
 

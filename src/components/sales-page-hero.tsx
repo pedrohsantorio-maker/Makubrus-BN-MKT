@@ -24,9 +24,9 @@ const itemVariants = {
 
 const handleCtaClick = (placement: string) => {
     logEvent('cta_click', { placement });
+    logEvent('begin_checkout'); // Important for funnel tracking
     window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
 };
-
 
 export const SalesPageHero = () => (
   <motion.section 

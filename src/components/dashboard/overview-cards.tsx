@@ -3,15 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Activity, CreditCard } from 'lucide-react';
 import { useAnalytics } from '@/firebase/firebase-provider';
+import { Skeleton } from '../ui/skeleton';
 
 export function OverviewCards() {
-  const { activeLeads, leadsLast24h, totalConversions } = useAnalytics();
+  const { activeLeads, leadsLast24h, totalConversions, loading } = useAnalytics();
 
   const overviewData = [
-    { title: "Leads (24h)", value: `+${leadsLast24h}`, change: "from last 24h", icon: Users },
-    { title: "Conversões", value: `+${totalConversions}`, change: "total", icon: CreditCard },
-    { title: "Leads Ativos Agora", value: `${activeLeads}`, change: "Em tempo real", icon: Activity },
-  ]
+    { title: "Leads (24h)", value: loading ? <Skeleton className="h-8 w-20" /> : `+${leadsLast24h}`, change: "from last 24h", icon: Users },
+    { title: "Conversões", value: loading ? <Skeleton className="h-8 w-16" /> : `+${totalConversions}`, change: "total (purchase event)", icon: CreditCard },
+    { title: "Leads Ativos Agora", value: loading ? <Skeleton className="h-8 w-12" /> : `${activeLeads}`, change: "Em tempo real (heartbeat)", icon: Activity },
+  ];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -18,7 +19,8 @@ export function LoadingClient() {
   const [glitch, setGlitch] = useState(false);
 
   useEffect(() => {
-    logEvent("loading_started");
+    logEvent("page_view", { title: "Loading" });
+
     const textInterval = setInterval(() => {
       setGlitch(true);
       setTimeout(() => setGlitch(false), 80);

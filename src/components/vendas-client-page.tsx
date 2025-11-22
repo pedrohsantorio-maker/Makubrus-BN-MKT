@@ -42,6 +42,8 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
   const [vagas, setVagas] = useState(8);
 
   useEffect(() => {
+    logEvent("page_view", { title: "Sales Page" });
+    
     const interval = setInterval(() => {
       setVagas((v) => {
         if (v > 1) {
@@ -57,6 +59,7 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
 
   const handleCtaClick = (placement: string) => {
     logEvent('cta_click', { placement });
+    logEvent('begin_checkout'); // Important for funnel tracking
     window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
   };
 
@@ -183,4 +186,3 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
     </div>
   );
 }
-
