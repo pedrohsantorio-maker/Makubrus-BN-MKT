@@ -14,18 +14,31 @@ const firebaseConfig: FirebaseOptions = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+const hasAllFirebaseConfigValues = 
+    firebaseConfig.apiKey &&
+    firebaseConfig.authDomain &&
+    firebaseConfig.projectId &&
+    firebaseConfig.storageBucket &&
+    firebaseConfig.messagingSenderId &&
+    firebaseConfig.appId;
+
 // Initialize Firebase
 let app;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
+if (hasAllFirebaseConfigValues) {
+    if (!getApps().length) {
+        app = initializeApp(firebaseConfig);
+    } else {
+        app = getApps()[0];
+    }
 } else {
-  app = getApps()[0];
+    console.error("Firebase config is missing or incomplete. Please check your environment variables.");
 }
+
 
 let analytics;
 export let firestore: any; // Allow export
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && app) {
   try {
     analytics = getAnalytics(app);
   } catch (e) {
@@ -55,6 +68,12 @@ const getSessionId = () => {
 export const logEvent = (eventName: string, params?: { [key: string]: any }) => {
   const sessionId = getSessionId();
   console.log(`[Analytics Event]: ${eventName}`, { ...params, sessionId });
+  
+  if (!hasAllFirebaseConfigValues) {
+    console.warn("Firebase not configured, skipping event logging.");
+    return;
+  }
+
   if (analytics) {
     firebaseLogEvent(analytics, eventName, params);
   }
