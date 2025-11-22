@@ -1,3 +1,4 @@
+
 "use client";
 
 import { motion } from 'framer-motion';
@@ -20,6 +21,12 @@ const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
 };
+
+const handleCtaClick = (placement: string) => {
+    logEvent('cta_click', { placement });
+    window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+};
+
 
 export const SalesPageHero = () => (
   <motion.section 
@@ -73,7 +80,7 @@ export const SalesPageHero = () => (
       Acesso liberado a uma coleção de materiais restritos, raros e privados. O que você verá aqui não pode ser encontrado em nenhum outro lugar.
     </motion.p>
     <motion.div variants={itemVariants} className="pt-8 w-full max-w-md pointer-events-auto">
-      <MotionButton onClick={() => logEvent('main_cta_click', { placement: 'hero' })} pulse>
+      <MotionButton onClick={() => handleCtaClick('main_cta_click')} pulse>
         GARANTIR ACESSO VITALÍCIO
       </MotionButton>
     </motion.div>

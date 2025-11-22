@@ -55,6 +55,10 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
     return () => clearInterval(interval);
   }, []);
 
+  const handleCtaClick = (placement: string) => {
+    logEvent('cta_click', { placement });
+    window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+  };
 
   return (
     <div className="bg-transparent text-white min-h-screen overflow-x-hidden">
@@ -145,7 +149,7 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
             <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="font-headline text-4xl md:text-6xl font-bold tracking-tight">Vagas Quase Esgotadas</motion.h2>
             <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-lg md:text-xl text-muted-foreground max-w-2xl">O acesso é extremamente limitado e será encerrado a qualquer momento. Esta é sua última oportunidade de entrar.</motion.p>
             <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="pt-8 w-full max-w-lg pointer-events-auto">
-                <MotionButton onClick={() => logEvent('final_cta_click', { placement: 'footer' })} vibrate>
+                <MotionButton onClick={() => handleCtaClick('final_cta_click')} vibrate>
                     Entrar no grupo privado agora
                 </MotionButton>
             </motion.div>
@@ -179,6 +183,4 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
     </div>
   );
 }
-
-
 
