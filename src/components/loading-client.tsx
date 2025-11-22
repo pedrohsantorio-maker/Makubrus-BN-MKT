@@ -33,7 +33,7 @@ export function LoadingClient() {
 
     const redirectTimeout = setTimeout(() => {
       logEvent("loading_sequence_complete");
-      router.push('/vsl');
+      router.push('/vendas');
     }, 2500);
 
     return () => {
