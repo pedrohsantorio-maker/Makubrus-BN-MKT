@@ -5,6 +5,7 @@ import * as React from "react"
 import { addDays, format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
+import { ptBR } from "date-fns/locale";
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -19,19 +20,30 @@ export function CalendarDateRangePicker({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2023, 0, 20),
-    to: addDays(new Date(2023, 0, 20), 20),
+    from: new Date(),
+    to: new Date(),
   })
 
+  const setToday = () => {
+    setDate({ from: new Date(), to: new Date() });
+  }
+
+  const setYesterday = () => {
+    const yesterday = addDays(new Date(), -1);
+    setDate({ from: yesterday, to: yesterday });
+  }
+
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-2", className)}>
+      <Button onClick={setToday} variant="outline" className="w-full md:w-auto">Hoje</Button>
+      <Button onClick={setYesterday} variant="outline" className="w-full md:w-auto">Ontem</Button>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[260px] justify-start text-left font-normal",
+              "w-full md:w-[260px] justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
           >
@@ -39,14 +51,14 @@ export function CalendarDateRangePicker({
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
+                  {format(date.from, "dd 'de' LLL, y", { locale: ptBR })} -{" "}
+                  {format(date.to, "dd 'de' LLL, y", { locale: ptBR })}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(date.from, "dd 'de' LLL, y", { locale: ptBR })
               )
             ) : (
-              <span>Pick a date</span>
+              <span>Escolha uma data</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -58,6 +70,7 @@ export function CalendarDateRangePicker({
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+            locale={ptBR}
           />
         </PopoverContent>
       </Popover>
