@@ -61,22 +61,24 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         
         const uniqueSessionIdsForEvent = (eventName: string | string[]) => {
             const names = Array.isArray(eventName) ? eventName : [eventName];
-            return new Set(
-                events
-                    .filter(e => names.includes(e.name))
-                    .map(e => e.sessionId)
-            );
+            const sessionIds = new Set<string>();
+            events.forEach(e => {
+                if (names.includes(e.name) && e.sessionId) {
+                    sessionIds.add(e.sessionId);
+                }
+            });
+            return sessionIds;
         };
         
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-        const activeUsers = new Set(
-            events
-                .filter(e => e.createdAt.toDate() > fiveMinutesAgo)
-                .map(e => e.sessionId)
-        );
+        const activeUsers = new Set<string>();
+        events.forEach(e => {
+            if (e.createdAt.toDate() > fiveMinutesAgo && e.sessionId) {
+                activeUsers.add(e.sessionId);
+            }
+        });
 
         const leads24h = uniqueSessionIdsForEvent("loading_started");
-
         const totalConversionsSet = uniqueSessionIdsForEvent(["main_cta_click", "final_cta_click"]);
 
         const funnelStep1 = uniqueSessionIdsForEvent("age_gate");
@@ -120,7 +122,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         setAnalyticsData(prev => ({ 
             ...prev, 
             recentLeads: leads, 
-            loading: prev.loading,
+            loading: prev.loading, // Keep original loading state
             lastUpdatedAt: new Date()
         }));
     });
