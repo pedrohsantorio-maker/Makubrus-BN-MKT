@@ -34,16 +34,18 @@ export function CalendarDateRangePicker({
   }
 
   return (
-    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-2", className)}>
-      <Button onClick={setToday} variant="outline" className="w-full md:w-auto">Hoje</Button>
-      <Button onClick={setYesterday} variant="outline" className="w-full md:w-auto">Ontem</Button>
+    <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:flex lg:items-center lg:gap-2", className)}>
+        <div className="grid grid-cols-2 gap-2 lg:w-auto">
+            <Button onClick={setToday} variant="outline" className="w-full">Hoje</Button>
+            <Button onClick={setYesterday} variant="outline" className="w-full">Ontem</Button>
+        </div>
       <Popover>
         <PopoverTrigger asChild>
           <Button
             id="date"
             variant={"outline"}
             className={cn(
-              "w-full md:w-[260px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal lg:w-[260px]",
               !date && "text-muted-foreground"
             )}
           >
