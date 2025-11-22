@@ -9,19 +9,24 @@ import { Skeleton } from '../ui/skeleton';
 export function LastUpdateStatus() {
   const { lastUpdatedAt, loading } = useAnalytics();
   const [timeAgo, setTimeAgo] = useState('');
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    if (lastUpdatedAt) {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (lastUpdatedAt && isClient) {
       const update = () => {
         setTimeAgo(formatDistanceToNow(lastUpdatedAt, { addSuffix: true, locale: ptBR }));
       };
       update();
-      const intervalId = setInterval(update, 1000);
+      const intervalId = setInterval(update, 1000); // More frequent update
       return () => clearInterval(intervalId);
     }
-  }, [lastUpdatedAt]);
+  }, [lastUpdatedAt, isClient]);
 
-  if (loading) {
+  if (loading || !isClient) {
     return <Skeleton className="h-5 w-40" />;
   }
 
