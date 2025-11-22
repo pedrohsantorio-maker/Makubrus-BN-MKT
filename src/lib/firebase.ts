@@ -30,8 +30,6 @@ if (hasAllFirebaseConfigValues) {
     } else {
         app = getApps()[0];
     }
-} else {
-    console.error("Firebase config is missing or incomplete. Please check your environment variables.");
 }
 
 
@@ -42,12 +40,12 @@ if (typeof window !== 'undefined' && app) {
   try {
     analytics = getAnalytics(app);
   } catch (e) {
-    console.error("Failed to initialize Analytics", e);
+    console.warn("Failed to initialize Analytics", e);
   }
   try {
     firestore = getFirestore(app);
   } catch(e) {
-    console.error("Failed to initialize Firestore", e);
+    console.warn("Failed to initialize Firestore", e);
   }
 }
 
@@ -67,10 +65,15 @@ const getSessionId = () => {
 
 export const logEvent = (eventName: string, params?: { [key: string]: any }) => {
   const sessionId = getSessionId();
-  console.log(`[Analytics Event]: ${eventName}`, { ...params, sessionId });
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Analytics Event]: ${eventName}`, { ...params, sessionId });
+  }
   
   if (!hasAllFirebaseConfigValues) {
-    console.warn("Firebase not configured, skipping event logging.");
+    // Silently fail in production if firebase is not configured.
+    if (process.env.NODE_ENV === 'development') {
+        console.warn("Firebase not configured, skipping event logging.");
+    }
     return;
   }
 
