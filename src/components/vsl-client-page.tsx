@@ -56,7 +56,7 @@ export function VslClientPage() {
 
   const handleCtaClick = () => {
     logEvent("click_vsl_cta");
-    window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+    router.push('/vendas');
   };
 
   return (
