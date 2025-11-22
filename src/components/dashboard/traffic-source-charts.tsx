@@ -3,17 +3,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell } from 'recharts';
 
-const trafficData = [
-  { name: 'Google Ads', value: 400, fill: 'hsl(var(--chart-1))' },
-  { name: 'Facebook Ads', value: 300, fill: 'hsl(var(--chart-2))' },
-  { name: 'Orgânico', value: 200, fill: 'hsl(var(--chart-3))' },
-  { name: 'Email', value: 278, fill: 'hsl(var(--chart-4))' },
-  { name: 'Outros', value: 189, fill: 'hsl(var(--chart-5))' },
+const trafficData: any[] = [
+  // Static data removed, will be populated from analytics
 ];
 
-const deviceData = [
-    { name: 'Desktop', value: 45, fill: 'hsl(var(--chart-1))' },
-    { name: 'Mobile', value: 55, fill: 'hsl(var(--chart-2))' },
+const deviceData: any[] = [
+    // Static data removed, will be populated from analytics
 ]
 
 export function TrafficSourceCharts() {
@@ -23,6 +18,7 @@ export function TrafficSourceCharts() {
         <CardTitle>Origem do Tráfego</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-2 h-[350px]">
+            {trafficData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={trafficData} layout="vertical" margin={{ left: 10, right: 10 }}>
                     <XAxis type="number" hide />
@@ -35,6 +31,10 @@ export function TrafficSourceCharts() {
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>
+            ) : (
+                <div className="flex items-center justify-center text-muted-foreground text-sm">Dados de origem de tráfego indisponíveis.</div>
+            )}
+            {deviceData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                     <Pie data={deviceData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
@@ -46,6 +46,9 @@ export function TrafficSourceCharts() {
                     <Legend iconSize={10} />
                 </PieChart>
             </ResponsiveContainer>
+             ) : (
+                <div className="flex items-center justify-center text-muted-foreground text-sm">Dados de dispositivo indisponíveis.</div>
+            )}
         </CardContent>
     </Card>
   );

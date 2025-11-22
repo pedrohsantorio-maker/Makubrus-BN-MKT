@@ -2,15 +2,34 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-
-const funnelData = [
-  { stage: "Visitas", value: 12830, conversion: 100 },
-  { stage: "Leads (Página 1)", value: 4850, conversion: 37.8 },
-  { stage: "Iniciaram Checkout", value: 1203, conversion: 24.8 },
-  { stage: "Pagamento Aprovado", value: 541, conversion: 45.0 },
-];
+import { useAnalytics } from '@/firebase/firebase-provider';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function ConversionFunnel() {
+  const { funnelData, loading } = useAnalytics();
+
+  if (loading) {
+    return (
+      <Card className="col-span-4 lg:col-span-3">
+        <CardHeader>
+          <Skeleton className="h-6 w-1/2" />
+          <Skeleton className="h-4 w-3/4" />
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="space-y-2">
+              <div className="flex justify-between">
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-4 w-1/6" />
+              </div>
+              <Skeleton className="h-4 w-full" />
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="col-span-4 lg:col-span-3">
         <CardHeader>
