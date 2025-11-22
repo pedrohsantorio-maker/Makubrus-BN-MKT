@@ -43,10 +43,10 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         setAnalyticsData(prev => ({ ...prev, activeLeads: uniqueUsers.size }));
     });
 
-    // --- Leads in last 24h (view_vsl) ---
+    // --- Leads in last 24h (started loading sequence) ---
     const leads24hQuery = query(
         collection(firestore, "events"),
-        where("name", "==", "view_vsl"),
+        where("name", "==", "loading_started"),
         where("createdAt", ">", Timestamp.fromDate(new Date(Date.now() - 24 * 60 * 60 * 1000)))
     );
 
@@ -55,10 +55,10 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
         setAnalyticsData(prev => ({ ...prev, leadsLast24h: uniqueUsers.size }));
     });
 
-    // --- Total Conversions (click_vsl_cta) ---
+    // --- Total Conversions (clicked final CTA on sales page) ---
     const conversionsQuery = query(
         collection(firestore, "events"),
-        where("name", "==", "click_vsl_cta")
+        where("name", "in", ["main_cta_click", "final_cta_click"])
     );
 
     const unsubscribeConversions = onSnapshot(conversionsQuery, (snapshot) => {
