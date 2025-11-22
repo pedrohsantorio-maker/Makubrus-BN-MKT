@@ -12,6 +12,7 @@ interface AnalyticsData {
   totalConversions: number;
   funnelData: { stage: string; value: number; conversion: number }[];
   recentLeads: { id: string; sessionId: string; createdAt: Timestamp }[];
+  lastUpdatedAt: Date | null;
 }
 
 const AnalyticsContext = createContext<AnalyticsData>({
@@ -21,6 +22,7 @@ const AnalyticsContext = createContext<AnalyticsData>({
   totalConversions: 0,
   funnelData: [],
   recentLeads: [],
+  lastUpdatedAt: null,
 });
 
 export const useAnalytics = () => useContext(AnalyticsContext);
@@ -37,6 +39,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       { stage: "Cliquaram no CTA (Vendas)", value: 0, conversion: 0 },
     ],
     recentLeads: [],
+    lastUpdatedAt: null,
   });
 
   useEffect(() => {
@@ -48,7 +51,6 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
     const twentyFourHoursAgo = Timestamp.fromDate(new Date(Date.now() - 24 * 60 * 60 * 1000));
 
-    // --- Query for all relevant events in the last 24 hours ---
     const eventsQuery = query(
       collection(firestore, "events"),
       where("createdAt", ">", twentyFourHoursAgo)
@@ -66,7 +68,6 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
             );
         };
         
-        // --- Active Leads (active in last 5 mins) ---
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
         const activeUsers = new Set(
             events
@@ -74,16 +75,13 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
                 .map(e => e.sessionId)
         );
 
-        // --- Leads Last 24h (started loading) ---
         const leads24h = uniqueSessionIdsForEvent("loading_started");
 
-        // --- Total Conversions (clicked final CTA) ---
         const totalConversionsSet = uniqueSessionIdsForEvent(["main_cta_click", "final_cta_click"]);
 
-        // --- Funnel Data ---
         const funnelStep1 = uniqueSessionIdsForEvent("age_gate");
         const funnelStep2 = uniqueSessionIdsForEvent("view_vsl");
-        const funnelStep3 = totalConversionsSet;
+        const funnelStep3 = uniqueSessionIdsForEvent("cta_click");
 
         const funnelData = [
           { stage: "Visitas na Age Gate", value: funnelStep1.size, conversion: 100 },
@@ -98,11 +96,11 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
             leadsLast24h: leads24h.size,
             totalConversions: totalConversionsSet.size,
             funnelData,
-            loading: false, // Data has been loaded
+            loading: false,
+            lastUpdatedAt: new Date(),
         }));
     });
 
-    // --- Recent Leads (last 5 to view VSL) ---
     const recentLeadsQuery = query(
         collection(firestore, "events"),
         where("name", "==", "view_vsl"),
@@ -119,7 +117,12 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
                 createdAt: data.createdAt || Timestamp.now(),
             };
         });
-        setAnalyticsData(prev => ({ ...prev, recentLeads: leads, loading: prev.loading }));
+        setAnalyticsData(prev => ({ 
+            ...prev, 
+            recentLeads: leads, 
+            loading: prev.loading,
+            lastUpdatedAt: new Date()
+        }));
     });
 
 
