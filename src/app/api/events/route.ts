@@ -5,21 +5,22 @@ import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
 
 // Initialize Firebase Admin SDK
 let app: App;
-if (!getApps().length) {
-  // This requires the FIREBASE_ADMIN_SDK_JSON environment variable to be set.
-  try {
-    const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK_JSON as string);
-    app = initializeApp({
-      credential: cert(serviceAccount),
-    });
-  } catch (e) {
-    console.error("Failed to initialize Firebase Admin SDK. Make sure FIREBASE_ADMIN_SDK_JSON is set.", e);
-  }
-} else {
-  app = getApps()[0];
+let db: ReturnType<typeof getFirestore>;
+
+try {
+    if (!getApps().length) {
+        const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK_JSON as string);
+        app = initializeApp({
+            credential: cert(serviceAccount),
+        });
+    } else {
+        app = getApps()[0];
+    }
+    db = getFirestore(app);
+} catch (e) {
+    console.error("CRITICAL: Failed to initialize Firebase Admin SDK. Make sure FIREBASE_ADMIN_SDK_JSON is set.", e);
 }
 
-const db = getFirestore(app);
 
 // This function processes each incoming event
 async function processEvent(event: any) {
@@ -34,45 +35,45 @@ async function processEvent(event: any) {
 
   const liveRef = db.collection('analytics_aggregates').doc('live');
 
-  // Use a transaction to safely update aggregates
-  await db.runTransaction(async (transaction) => {
-    const liveDoc = await transaction.get(liveRef);
+  try {
+    const liveDoc = await liveRef.get();
     const now = new Date();
 
     let funnelData = { ageGateViews: 0, vslViews: 0, ctaClicks: 0, purchases: 0 };
     let activeSessionsData: { [key: string]: any } = {};
     let recentLeadsData: any[] = [];
-
-    if (liveDoc.exists) {
-      const existingData = liveDoc.data();
-      funnelData = existingData?.funnel || funnelData;
-      activeSessionsData = existingData?.activeSessions || activeSessionsData;
-      recentLeadsData = existingData?.recentLeads || recentLeadsData;
-    }
     
+    if (liveDoc.exists) {
+        const data = liveDoc.data();
+        funnelData = data?.funnel || funnelData;
+        activeSessionsData = data?.activeSessions || activeSessionsData;
+        recentLeadsData = data?.recentLeads || recentLeadsData;
+    }
+
     // --- Update session info ---
     if (sessionId) {
         const sessionRef = db.collection('sessions').doc(sessionId);
-        transaction.set(sessionRef, { 
+        // This is a separate write, not part of the main aggregate update
+        await sessionRef.set({ 
             lastSeenAt: createdAt,
             source: source,
             device: device,
-            lastFunnelStage: FieldValue.arrayUnion(name)
+            funnelStages: FieldValue.arrayUnion(name)
         }, { merge: true });
         
         // Update active sessions (heartbeat mechanism)
-        if (name === 'session_heartbeat' || name === 'page_view' || name === 'age_gate_view') {
+        if (name === 'session_heartbeat' || name === 'age_gate_view') {
             activeSessionsData[sessionId] = createdAt;
         }
     }
-
+    
     // --- Update funnel counters ---
     switch (name) {
       case 'age_gate_view':
-        funnelData.ageGateViews += 1;
+        funnelData.ageGateViews = (funnelData.ageGateViews || 0) + 1;
         break;
       case 'vsl_view':
-        funnelData.vslViews += 1;
+        funnelData.vslViews = (funnelData.vslViews || 0) + 1;
         // Add to recent leads (limited to 5)
         const newLead = { id: `lead_${sessionId.substring(0,6)}_${Date.now()}`, sessionId, createdAt };
         recentLeadsData.unshift(newLead);
@@ -83,14 +84,16 @@ async function processEvent(event: any) {
       case 'main_cta_click':
       case 'final_cta_click':
       case 'vsl_page_cta':
+        funnelData.ctaClicks = (funnelData.ctaClicks || 0) + 1;
+        break;
       case 'begin_checkout':
-        funnelData.ctaClicks += 1;
+        // This event might not directly increment a simple counter, but could be used elsewhere
         break;
       case 'purchase':
-        funnelData.purchases += 1;
+        funnelData.purchases = (funnelData.purchases || 0) + 1;
         break;
     }
-    
+
     // --- Cleanup old active sessions ---
     const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000).toISOString();
     const cleanedSessions: {[key: string]: any} = {};
@@ -105,15 +108,14 @@ async function processEvent(event: any) {
         funnel: funnelData,
         activeSessions: cleanedSessions,
         recentLeads: recentLeadsData,
-        lastUpdatedAt: FieldValue.serverTimestamp()
+        lastUpdatedAt: Timestamp.now()
     };
+    
+    await liveRef.set(updatePayload, { merge: true });
 
-    if (liveDoc.exists) {
-        transaction.update(liveRef, updatePayload);
-    } else {
-        transaction.set(liveRef, updatePayload);
-    }
-  });
+  } catch (error) {
+    console.error("Error processing event in backend:", error);
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -131,7 +133,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ status: 'ok' }, { status: 202 });
   } catch (error) {
-    console.error('Error processing event:', error);
+    console.error('Error in API route handler:', error);
     return NextResponse.json({ status: 'error', message: 'Internal Server Error' }, { status: 500 });
   }
 }
+
