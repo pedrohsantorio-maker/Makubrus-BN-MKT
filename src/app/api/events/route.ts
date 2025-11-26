@@ -8,19 +8,22 @@ let app: App;
 let db: ReturnType<typeof getFirestore>;
 
 try {
-    if (!getApps().length) {
+    if (process.env.FIREBASE_ADMIN_SDK_JSON) {
         const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_SDK_JSON as string);
-        app = initializeApp({
-            credential: cert(serviceAccount),
-        });
+        if (!getApps().length) {
+            app = initializeApp({
+                credential: cert(serviceAccount),
+            });
+        } else {
+            app = getApps()[0];
+        }
+        db = getFirestore(app);
     } else {
-        app = getApps()[0];
+        console.error("CRITICAL: FIREBASE_ADMIN_SDK_JSON is not set.");
     }
-    db = getFirestore(app);
 } catch (e) {
-    console.error("CRITICAL: Failed to initialize Firebase Admin SDK. Make sure FIREBASE_ADMIN_SDK_JSON is set.", e);
+    console.error("CRITICAL: Failed to initialize Firebase Admin SDK.", e);
 }
-
 
 // This function processes each incoming event
 async function processEvent(event: any) {
@@ -37,8 +40,7 @@ async function processEvent(event: any) {
 
   try {
     const liveDoc = await liveRef.get();
-    const now = new Date();
-
+    
     let funnelData = { ageGateViews: 0, vslViews: 0, ctaClicks: 0, purchases: 0 };
     let activeSessionsData: { [key: string]: any } = {};
     let recentLeadsData: any[] = [];
@@ -53,15 +55,13 @@ async function processEvent(event: any) {
     // --- Update session info ---
     if (sessionId) {
         const sessionRef = db.collection('sessions').doc(sessionId);
-        // This is a separate write, not part of the main aggregate update
         await sessionRef.set({ 
             lastSeenAt: createdAt,
             source: source,
             device: device,
-            funnelStages: FieldValue.arrayUnion(name)
+            lastFunnelStage: name // Directly set the last stage
         }, { merge: true });
         
-        // Update active sessions (heartbeat mechanism)
         if (name === 'session_heartbeat' || name === 'age_gate_view') {
             activeSessionsData[sessionId] = createdAt;
         }
@@ -74,20 +74,14 @@ async function processEvent(event: any) {
         break;
       case 'vsl_view':
         funnelData.vslViews = (funnelData.vslViews || 0) + 1;
-        // Add to recent leads (limited to 5)
         const newLead = { id: `lead_${sessionId.substring(0,6)}_${Date.now()}`, sessionId, createdAt };
         recentLeadsData.unshift(newLead);
-        if (recentLeadsData.length > 5) {
-            recentLeadsData.pop();
-        }
+        if (recentLeadsData.length > 5) recentLeadsData.pop();
         break;
       case 'main_cta_click':
       case 'final_cta_click':
       case 'vsl_page_cta':
         funnelData.ctaClicks = (funnelData.ctaClicks || 0) + 1;
-        break;
-      case 'begin_checkout':
-        // This event might not directly increment a simple counter, but could be used elsewhere
         break;
       case 'purchase':
         funnelData.purchases = (funnelData.purchases || 0) + 1;
@@ -95,7 +89,7 @@ async function processEvent(event: any) {
     }
 
     // --- Cleanup old active sessions ---
-    const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000).toISOString();
+    const tenMinutesAgo = new Date(new Date().getTime() - 10 * 60 * 1000).toISOString();
     const cleanedSessions: {[key: string]: any} = {};
     for (const [sid, timestamp] of Object.entries(activeSessionsData)) {
         if (timestamp > tenMinutesAgo) {
@@ -119,22 +113,27 @@ async function processEvent(event: any) {
 }
 
 export async function POST(req: NextRequest) {
+  if (!db) {
+      return NextResponse.json({ status: 'error', message: 'Backend not initialized' }, { status: 500 });
+  }
   try {
     const event = await req.json();
 
-    // Basic validation
     if (!event.name || !event.sessionId) {
       return NextResponse.json({ status: 'error', message: 'Missing required event data' }, { status: 400 });
     }
     
-    // Don't wait for processing to finish to send response,
-    // makes the client-side experience faster.
-    processEvent(event).catch(console.error);
-
+    // Use `waitUntil` if available (Vercel Edge), or just await otherwise.
+    // This allows the response to be sent faster.
+    if ((global as any).waitUntil) {
+      (global as any).waitUntil(processEvent(event));
+    } else {
+      await processEvent(event);
+    }
+    
     return NextResponse.json({ status: 'ok' }, { status: 202 });
   } catch (error) {
     console.error('Error in API route handler:', error);
     return NextResponse.json({ status: 'error', message: 'Internal Server Error' }, { status: 500 });
   }
 }
-
