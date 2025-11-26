@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { initializeApp, getApps, cert, App } from 'firebase-admin/app';
-import { getFirestore, FieldValue, Timestamp } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
 // Initialize Firebase Admin SDK
 let app: App;
@@ -117,7 +117,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: 'error', message: 'Backend not initialized' }, { status: 500 });
   }
   try {
-    const event = await req.json();
+    // FIX: Read the body as text and parse it, as sendBeacon sends a Blob.
+    const bodyAsText = await req.text();
+    const event = JSON.parse(bodyAsText);
 
     if (!event.name || !event.sessionId) {
       return NextResponse.json({ status: 'error', message: 'Missing required event data' }, { status: 400 });
