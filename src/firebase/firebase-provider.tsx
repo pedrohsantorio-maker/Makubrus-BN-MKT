@@ -3,19 +3,35 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { firestore } from '@/lib/firebase';
-import { collection, onSnapshot, query, where, Timestamp, orderBy, limit } from 'firebase/firestore';
+import { doc, onSnapshot, Timestamp } from 'firebase/firestore';
 
-interface AnalyticsData {
+// This interface defines the structure of our aggregated analytics data
+// that we expect to receive from Firestore.
+interface LiveAnalyticsData {
+  activeSessions: { [sessionId: string]: number };
+  funnel: {
+    ageGateViews: number;
+    vslViews: number;
+    ctaClicks: number;
+    purchases: number;
+  };
+  recentLeads: { id: string; sessionId: string; createdAt: Timestamp }[];
+  lastUpdatedAt: Timestamp;
+}
+
+// This interface defines the data structure provided by our context.
+// It's a processed version of the raw data from Firestore.
+interface AnalyticsContextData {
   loading: boolean;
   activeLeads: number;
-  leadsLast24h: number;
-  totalConversions: number;
+  leadsLast24h: number; // This will now come from aggregated data if available, or be 0.
+  totalConversions: number; // This will now come from aggregated data.
   funnelData: { stage: string; value: number; conversion: number }[];
   recentLeads: { id: string; sessionId: string; createdAt: Timestamp }[];
   lastUpdatedAt: Date | null;
 }
 
-const AnalyticsContext = createContext<AnalyticsData>({
+const AnalyticsContext = createContext<AnalyticsContextData>({
   loading: true,
   activeLeads: 0,
   leadsLast24h: 0,
@@ -28,15 +44,16 @@ const AnalyticsContext = createContext<AnalyticsData>({
 export const useAnalytics = () => useContext(AnalyticsContext);
 
 export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsContextData>({
     loading: true,
     activeLeads: 0,
-    leadsLast24h: 0,
+    leadsLast24h: 0, // Placeholder, will be updated
     totalConversions: 0,
     funnelData: [
       { stage: "Visitas na Age Gate", value: 0, conversion: 100 },
       { stage: "Visualizaram VSL", value: 0, conversion: 0 },
       { stage: "Cliques no CTA (Vendas)", value: 0, conversion: 0 },
+      { stage: "Compras", value: 0, conversion: 0 },
     ],
     recentLeads: [],
     lastUpdatedAt: null,
@@ -49,115 +66,63 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    
-    const eventsQuery = query(
-      collection(firestore, "events"),
-      where("createdAt", ">", twentyFourHoursAgo)
-    );
+    // We now listen to a single document containing all live aggregated data.
+    // This is much more efficient than querying the entire events collection.
+    const liveDocRef = doc(firestore, "analytics_aggregates", "live");
 
-    const unsubscribeEvents = onSnapshot(eventsQuery, (snapshot) => {
-      const events = snapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-              name: data.name,
-              sessionId: data.sessionId,
-              createdAt: (data.createdAt as Timestamp)?.toDate(),
-          };
-      }).filter(e => e.createdAt); // Filter out events with no timestamp
-      
-      // Helper to get unique session IDs for a given event name or names
-      const getUniqueSessionIds = (eventNames: string | string[]) => {
-        const names = Array.isArray(eventNames) ? eventNames : [eventNames];
-        const sessionIds = new Set<string>();
-        events.forEach(e => {
-            if (names.includes(e.name) && e.sessionId) {
-                sessionIds.add(e.sessionId);
-            }
+    const unsubscribe = onSnapshot(liveDocRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data() as LiveAnalyticsData;
+
+        // --- Process Funnel Data ---
+        const { ageGateViews, vslViews, ctaClicks, purchases } = data.funnel || { ageGateViews: 0, vslViews: 0, ctaClicks: 0, purchases: 0};
+        
+        const funnelData = [
+          { 
+            stage: "Visitas na Age Gate", 
+            value: ageGateViews, 
+            conversion: 100 
+          },
+          { 
+            stage: "Visualizaram VSL", 
+            value: vslViews, 
+            conversion: ageGateViews > 0 ? (vslViews / ageGateViews) * 100 : 0 
+          },
+          { 
+            stage: "Cliques no CTA (Vendas)", 
+            value: ctaClicks, 
+            conversion: vslViews > 0 ? (ctaClicks / vslViews) * 100 : 0 
+          },
+          {
+            stage: "Compras",
+            value: purchases,
+            conversion: ctaClicks > 0 ? (purchases / ctaClicks) * 100 : 0
+          }
+        ];
+
+        // --- Process other KPIs ---
+        const activeLeadsCount = data.activeSessions ? Object.keys(data.activeSessions).length : 0;
+        
+        setAnalyticsData({
+          loading: false,
+          activeLeads: activeLeadsCount,
+          leadsLast24h: vslViews, // Assuming the 'live' doc covers the last 24h for simplicity. A more complex system would be needed for a true sliding 24h window.
+          totalConversions: purchases,
+          funnelData,
+          recentLeads: data.recentLeads || [],
+          lastUpdatedAt: data.lastUpdatedAt ? data.lastUpdatedAt.toDate() : new Date(),
         });
-        return sessionIds;
-      };
-
-      // --- Calculate Active Leads (heartbeat in last 5 mins) ---
-      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-      const activeSessionIds = new Set<string>();
-      events.forEach(e => {
-        if (e.name === 'session_heartbeat' && e.createdAt > fiveMinutesAgo) {
-          activeSessionIds.add(e.sessionId);
-        }
-      });
-
-      // --- Calculate Funnel Data ---
-      const funnelStep1_visits = getUniqueSessionIds('age_gate_view');
-      const funnelStep2_vsl_views = getUniqueSessionIds('vsl_view');
-      const funnelStep3_cta_clicks = getUniqueSessionIds(['main_cta_click', 'final_cta_click', 'vsl_page_cta']);
-      
-      const funnelData = [
-        { 
-          stage: "Visitas na Age Gate", 
-          value: funnelStep1_visits.size, 
-          conversion: 100 
-        },
-        { 
-          stage: "Visualizaram VSL", 
-          value: funnelStep2_vsl_views.size, 
-          conversion: funnelStep1_visits.size > 0 ? (funnelStep2_vsl_views.size / funnelStep1_visits.size) * 100 : 0 
-        },
-        { 
-          stage: "Conversões (CTA Vendas)", 
-          value: funnelStep3_cta_clicks.size, 
-          conversion: funnelStep2_vsl_views.size > 0 ? (funnelStep3_cta_clicks.size / funnelStep2_vsl_views.size) * 100 : 0 
-        },
-      ];
-      
-      // --- Calculate Main KPIs ---
-      const leads24h = funnelStep2_vsl_views; // A lead is anyone who VIEWED THE VSL
-      const totalConversions = getUniqueSessionIds('purchase'); // A real conversion is a purchase
-
-      setAnalyticsData(prev => ({
-        ...prev,
-        activeLeads: activeSessionIds.size,
-        leadsLast24h: leads24h.size,
-        totalConversions: totalConversions.size,
-        funnelData,
-        loading: false,
-        lastUpdatedAt: new Date(),
-      }));
+      } else {
+        // Document doesn't exist yet, probably because no events have been sent.
+        console.log("Live analytics document not found. Waiting for first event.");
+        setAnalyticsData(prev => ({ ...prev, loading: false }));
+      }
     }, (error) => {
-        console.error("Error fetching real-time events:", error);
+        console.error("Error fetching live analytics:", error);
         setAnalyticsData(prev => ({ ...prev, loading: false }));
     });
 
-    // --- Listener for Recent Leads Table ---
-    const recentLeadsQuery = query(
-      collection(firestore, "events"),
-      where("name", "==", "vsl_view"),
-      orderBy("createdAt", "desc"),
-      limit(5)
-    );
-
-    const unsubscribeRecentLeads = onSnapshot(recentLeadsQuery, (snapshot) => {
-      const leads = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          sessionId: data.sessionId || 'N/A',
-          createdAt: data.createdAt || Timestamp.now(),
-        };
-      });
-      setAnalyticsData(prev => ({
-        ...prev,
-        recentLeads: leads,
-        lastUpdatedAt: new Date()
-      }));
-    }, (error) => {
-        console.error("Error fetching recent leads:", error);
-    });
-
-    return () => {
-      unsubscribeEvents();
-      unsubscribeRecentLeads();
-    };
+    return () => unsubscribe();
   }, []);
 
   return (

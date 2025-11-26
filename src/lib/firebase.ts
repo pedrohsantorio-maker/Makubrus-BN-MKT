@@ -2,7 +2,7 @@
 'use client';
 
 import { initializeApp, getApps, type FirebaseOptions } from 'firebase/app';
-import { getFirestore, collection, addDoc, Timestamp } from 'firebase/firestore';
+import { getFirestore, Timestamp } from 'firebase/firestore';
 import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
 
 const firebaseConfig: FirebaseOptions = {
@@ -63,7 +63,6 @@ const getSessionId = () => {
   return sessionId;
 };
 
-
 // 2. Source Tracking
 const getSourceInfo = () => {
   if (typeof window === 'undefined') return {};
@@ -95,13 +94,12 @@ const getDeviceInfo = () => {
     };
 }
 
-
 // 4. Central Event Logging Function
 export const logEvent = (eventName: string, payload: { [key: string]: any } = {}) => {
   const currentSessionId = getSessionId();
-  if (!currentSessionId || !firestore) {
+  if (!currentSessionId) {
       if (process.env.NODE_ENV === 'development') {
-        console.warn("Firestore not ready or no session ID, skipping event log.", { hasFirestore: !!firestore, currentSessionId });
+        console.warn("No session ID, skipping event log.");
       }
       return;
   }
@@ -115,17 +113,18 @@ export const logEvent = (eventName: string, payload: { [key: string]: any } = {}
     },
     source: getSourceInfo(),
     device: getDeviceInfo(),
-    createdAt: Timestamp.fromDate(new Date()), // Use client-side timestamp
+    createdAt: new Date().toISOString(), // Use ISO string for API
   };
 
   if (process.env.NODE_ENV === 'development') {
-    console.log(`[EVENT]: ${eventName}`, eventData);
+    console.log(`[EVENT SENT]: ${eventName}`, eventData);
   }
-
-  // Send directly to Firestore
-  addDoc(collection(firestore, "events"), eventData).catch(error => {
-    console.error("Error writing event to Firestore: ", error);
-  });
+  
+  // Use keepalive for requests sent during page unload
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  navigator.sendBeacon('/api/events', JSON.stringify(eventData));
 
   // Also log to Google Analytics if available
   if (analytics) {
@@ -140,7 +139,9 @@ export const startHeartbeat = () => {
     if (heartbeatInterval) return; // Prevent multiple intervals
     logEvent('session_heartbeat'); // Log one immediately
     heartbeatInterval = setInterval(() => {
+      if (document.hasFocus()) { // Only send heartbeat if tab is active
         logEvent('session_heartbeat');
+      }
     }, 15000); // every 15 seconds
 };
 
@@ -156,4 +157,9 @@ if (typeof window !== 'undefined') {
     startHeartbeat();
     window.addEventListener('focus', startHeartbeat);
     window.addEventListener('blur', stopHeartbeat);
+
+    // Also log event on unload
+    window.addEventListener('beforeunload', () => {
+        logEvent('page_unload');
+    });
 }
