@@ -13,7 +13,7 @@ export function AgeGateClient() {
 
   useEffect(() => {
     // This is the first event, tracking the initial visit.
-    logEvent("page_view", { title: "Age Gate" });
+    logEvent("age_gate_view", { title: "Age Gate" });
   }, []);
 
   const handleAdult = () => {
