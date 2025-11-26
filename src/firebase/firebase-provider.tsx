@@ -49,29 +49,40 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    const twentyFourHoursAgo = Timestamp.fromDate(new Date(Date.now() - 24 * 60 * 60 * 1000));
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     
-    // --- Listener for all events in the last 24 hours ---
     const eventsQuery = query(
       collection(firestore, "events"),
       where("createdAt", ">", twentyFourHoursAgo)
     );
 
     const unsubscribeEvents = onSnapshot(eventsQuery, (snapshot) => {
-      const events = snapshot.docs.map(doc => doc.data() as { name: string; sessionId: string; createdAt: Timestamp });
+      const events = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+              name: data.name,
+              sessionId: data.sessionId,
+              createdAt: (data.createdAt as Timestamp)?.toDate(),
+          };
+      }).filter(e => e.createdAt); // Filter out events with no timestamp
       
       // Helper to get unique session IDs for a given event name or names
       const getUniqueSessionIds = (eventNames: string | string[]) => {
         const names = Array.isArray(eventNames) ? eventNames : [eventNames];
-        return new Set(events.filter(e => names.includes(e.name) && e.sessionId).map(e => e.sessionId));
+        const sessionIds = new Set<string>();
+        events.forEach(e => {
+            if (names.includes(e.name) && e.sessionId) {
+                sessionIds.add(e.sessionId);
+            }
+        });
+        return sessionIds;
       };
 
       // --- Calculate Active Leads (heartbeat in last 5 mins) ---
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
       const activeSessionIds = new Set<string>();
       events.forEach(e => {
-        // The createdAt is now an object with seconds and nanoseconds
-        if (e.name === 'session_heartbeat' && e.createdAt.toDate() > fiveMinutesAgo) {
+        if (e.name === 'session_heartbeat' && e.createdAt > fiveMinutesAgo) {
           activeSessionIds.add(e.sessionId);
         }
       });
@@ -100,7 +111,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
       ];
       
       // --- Calculate Main KPIs ---
-      const leads24h = funnelStep1_visits; // A lead is anyone who visited the site
+      const leads24h = funnelStep2_vsl_views; // A lead is anyone who VIEWED THE VSL
       const totalConversions = getUniqueSessionIds('purchase'); // A real conversion is a purchase
 
       setAnalyticsData(prev => ({
