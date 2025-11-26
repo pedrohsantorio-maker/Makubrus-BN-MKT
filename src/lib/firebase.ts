@@ -120,11 +120,9 @@ export const logEvent = (eventName: string, payload: { [key: string]: any } = {}
     console.log(`[EVENT SENT]: ${eventName}`, eventData);
   }
   
-  // Use keepalive for requests sent during page unload
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  navigator.sendBeacon('/api/events', JSON.stringify(eventData));
+  // Use navigator.sendBeacon for robustness, especially on page unload.
+  const blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+  navigator.sendBeacon('/api/events', blob);
 
   // Also log to Google Analytics if available
   if (analytics) {
@@ -136,13 +134,16 @@ export const logEvent = (eventName: string, payload: { [key: string]: any } = {}
 let heartbeatInterval: NodeJS.Timeout | null = null;
 
 export const startHeartbeat = () => {
-    if (heartbeatInterval) return; // Prevent multiple intervals
-    logEvent('session_heartbeat'); // Log one immediately
-    heartbeatInterval = setInterval(() => {
+    if (heartbeatInterval || typeof window === 'undefined') return; // Prevent multiple intervals
+    
+    const sendHeartbeat = () => {
       if (document.hasFocus()) { // Only send heartbeat if tab is active
         logEvent('session_heartbeat');
       }
-    }, 15000); // every 15 seconds
+    };
+    
+    sendHeartbeat(); // Log one immediately
+    heartbeatInterval = setInterval(sendHeartbeat, 15000); // every 15 seconds
 };
 
 export const stopHeartbeat = () => {
@@ -154,7 +155,9 @@ export const stopHeartbeat = () => {
 
 // Start heartbeat automatically when the lib is loaded and app is active
 if (typeof window !== 'undefined') {
-    startHeartbeat();
+    if (document.hasFocus()) {
+        startHeartbeat();
+    }
     window.addEventListener('focus', startHeartbeat);
     window.addEventListener('blur', stopHeartbeat);
 
