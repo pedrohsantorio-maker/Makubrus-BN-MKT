@@ -2,7 +2,7 @@
 'use client';
 
 import { initializeApp, getApps, type FirebaseOptions } from 'firebase/app';
-import { getFirestore, Timestamp } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getAnalytics, logEvent as firebaseLogEvent } from 'firebase/analytics';
 
 const firebaseConfig: FirebaseOptions = {
@@ -113,7 +113,7 @@ export const logEvent = (eventName: string, payload: { [key: string]: any } = {}
     },
     source: getSourceInfo(),
     device: getDeviceInfo(),
-    createdAt: new Date().toISOString(), // Use ISO string for API
+    createdAt: new Date().toISOString(),
   };
 
   if (process.env.NODE_ENV === 'development') {
@@ -134,16 +134,16 @@ export const logEvent = (eventName: string, payload: { [key: string]: any } = {}
 let heartbeatInterval: NodeJS.Timeout | null = null;
 
 export const startHeartbeat = () => {
-    if (heartbeatInterval || typeof window === 'undefined') return; // Prevent multiple intervals
+    if (heartbeatInterval || typeof window === 'undefined') return;
     
     const sendHeartbeat = () => {
-      if (document.hasFocus()) { // Only send heartbeat if tab is active
+      if (document.hasFocus()) {
         logEvent('session_heartbeat');
       }
     };
     
-    sendHeartbeat(); // Log one immediately
-    heartbeatInterval = setInterval(sendHeartbeat, 15000); // every 15 seconds
+    sendHeartbeat();
+    heartbeatInterval = setInterval(sendHeartbeat, 15000);
 };
 
 export const stopHeartbeat = () => {
@@ -161,7 +161,6 @@ if (typeof window !== 'undefined') {
     window.addEventListener('focus', startHeartbeat);
     window.addEventListener('blur', stopHeartbeat);
 
-    // Also log event on unload
     window.addEventListener('beforeunload', () => {
         logEvent('page_unload');
     });

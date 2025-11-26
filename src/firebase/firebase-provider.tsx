@@ -5,8 +5,6 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { firestore } from '@/lib/firebase';
 import { doc, onSnapshot, Timestamp } from 'firebase/firestore';
 
-// This interface defines the structure of our aggregated analytics data
-// that we expect to receive from Firestore.
 interface LiveAnalyticsData {
   activeSessions: { [sessionId: string]: string };
   funnel: {
@@ -15,19 +13,17 @@ interface LiveAnalyticsData {
     ctaClicks: number;
     purchases: number;
   };
-  recentLeads: { id: string; sessionId: string; createdAt: string }[];
+  recentLeads: { id: string; sessionId: string; createdAt: string }[]; // Keep as string from backend
   lastUpdatedAt: Timestamp;
 }
 
-// This interface defines the data structure provided by our context.
-// It's a processed version of the raw data from Firestore.
 interface AnalyticsContextData {
   loading: boolean;
   activeLeads: number;
   leadsLast24h: number; 
   totalConversions: number; 
   funnelData: { stage: string; value: number; conversion: number }[];
-  recentLeads: { id: string; sessionId: string; createdAt: Date }[];
+  recentLeads: { id: string; sessionId: string; createdAt: Timestamp }[]; // Keep as Timestamp for frontend
   lastUpdatedAt: Date | null;
 }
 
@@ -61,7 +57,7 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!firestore) {
-      console.warn("Firestore is not initialized. Real-time analytics will be disabled.");
+      console.warn("Firestore client is not initialized. Real-time analytics will be disabled.");
       setAnalyticsData(prev => ({ ...prev, loading: false }));
       return;
     }
@@ -99,11 +95,15 @@ export const FirebaseProvider = ({ children }: { children: ReactNode }) => {
 
         const activeLeadsCount = data.activeSessions ? Object.keys(data.activeSessions).length : 0;
         
-        // Convert string timestamps in recentLeads to Date objects
+        // The `createdAt` in recentLeads is now a Timestamp from Firestore
         const processedRecentLeads = (data.recentLeads || []).map(lead => ({
           ...lead,
-          createdAt: new Date(lead.createdAt)
+          createdAt: new Timestamp(
+              (lead.createdAt as any)._seconds,
+              (lead.createdAt as any)._nanoseconds
+          )
         }));
+
 
         setAnalyticsData({
           loading: false,
