@@ -13,6 +13,7 @@ import React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import {useEffect, useState} from 'react';
+import { useFirebase } from '@/firebase/firebase-provider';
 
 interface VendasClientPageProps {
     carouselImages: ImagePlaceholder[];
@@ -29,6 +30,7 @@ const previewVariants = {
 };
 
 export function VendasClientPage({ carouselImages, previewImages }: VendasClientPageProps) {
+  const { firestore, user } = useFirebase();
   const autoplayOptions = {
     delay: 2000,
     stopOnInteraction: true,
@@ -56,8 +58,13 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
   }, []);
 
   const handleCtaClick = async () => {
+    if (!firestore || !user) {
+        console.error("Firestore or user not available for tracking.");
+        window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+        return;
+    }
     try {
-      await trackConversionClick();
+      await trackConversionClick(firestore, user.uid);
       console.log('Conversion tracked. Redirecting...');
       window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
     } catch(error) {
