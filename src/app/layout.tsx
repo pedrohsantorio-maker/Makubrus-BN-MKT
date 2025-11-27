@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { FirebaseProvider } from '@/firebase/firebase-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 export const metadata: Metadata = {
   title: 'Clandestine Access',
@@ -28,13 +28,13 @@ export default function RootLayout({
         />
       </head>
       <body className="font-body antialiased">
-        <FirebaseProvider>
+        <FirebaseClientProvider>
           <div className="noise-overlay pointer-events-none"></div>
           <div className="vignette-overlay pointer-events-none"></div>
           <div className="radial-gradient-overlay pointer-events-none"></div>
           <div className="relative z-10">{children}</div>
           <Toaster />
-        </FirebaseProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );
