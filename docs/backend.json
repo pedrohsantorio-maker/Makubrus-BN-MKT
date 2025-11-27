@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "ConversionEvent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ConversionEvent",
+      "type": "object",
+      "description": "Represents a conversion event tracked within the application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the conversion event."
+        },
+        "eventType": {
+          "type": "string",
+          "description": "The type of conversion event (e.g., 'age_gate', 'loading_sequence_complete', 'exclusive_access_click')."
+        },
+        "eventTimestamp": {
+          "type": "string",
+          "description": "The timestamp of when the conversion event occurred.",
+          "format": "date-time"
+        },
+        "eventParams": {
+          "type": "string",
+          "description": "Additional event parameters in JSON format (e.g., { result: 'adult' })."
+        }
+      },
+      "required": [
+        "id",
+        "eventType",
+        "eventTimestamp"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/conversionEvents/{conversionEventId}",
+        "definition": {
+          "entityName": "ConversionEvent",
+          "schema": {
+            "$ref": "#/backend/entities/ConversionEvent"
+          },
+          "description": "Stores conversion event data for all users. Includes fields such as eventType, eventTimestamp, and eventParams. Allows anyone to create these documents, but protects against modification.",
+          "params": [
+            {
+              "name": "conversionEventId",
+              "description": "The unique identifier for the conversion event."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure is designed to store conversion events triggered by user interactions, focusing on simplicity and scalability.  The structure prioritizes Authorization Independence, DBAC (Database-Based Access Control) principles.  All data is stored under the `/conversionEvents` collection.\n\n**Authorization Independence:** All users, including anonymous users, can write conversion events. There are no hierarchical authorization dependencies; all security rules are based on the authenticated user, which may be null for anonymous users.\n\n**QAPs Support:** Secure `list` operations are inherently supported because all documents in the `/conversionEvents` collection share the same security requirements. The rules will allow read access to any authenticated or unauthenticated user, making `list` operations straightforward and secure based on minimal restrictions. This approach prevents the need for complex filtering within security rules.\n\nThe schema is denormalized such that the relevant `eventType`, `eventTimestamp` and `eventParams` are stored directly within each document, ensuring each write operation is atomic."
+  }
+}
