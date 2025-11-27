@@ -1,12 +1,11 @@
 
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Check, ShieldCheck } from 'lucide-react';
+import { Check, PlayCircle, ShieldCheck } from 'lucide-react';
 import { MotionButton } from '@/components/motion-button';
-import { trackConversionClick } from '@/lib/tracking';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -48,6 +47,7 @@ const benefits = [
 
 export function VslClientPage() {
   const router = useRouter();
+  const [videoStarted, setVideoStarted] = useState(false);
 
   const handleCtaClick = async () => {
     try {
@@ -57,6 +57,10 @@ export function VslClientPage() {
       console.error("Error navigating to sales page:", error);
       router.push('/vendas');
     }
+  };
+
+  const handleVideoPlay = () => {
+    setVideoStarted(true);
   };
 
   return (
@@ -99,18 +103,27 @@ export function VslClientPage() {
           
           <motion.div 
             variants={itemVariants} 
-            className="w-full aspect-video bg-black border border-primary/20 rounded-lg flex items-center justify-center shadow-[0_0_30px_rgba(255,0,0,0.2)] p-1"
+            className="relative w-full aspect-video bg-black border border-primary/20 rounded-lg flex items-center justify-center shadow-[0_0_30px_rgba(255,0,0,0.2)] p-1"
           >
-            <div className="w-full h-full bg-black flex items-center justify-center rounded-md">
+            <div className="w-full h-full bg-black flex items-center justify-center rounded-md overflow-hidden">
               <video
                 controls
                 className="w-full h-full rounded-md"
                 src="https://i.imgur.com/1UUPryn.mp4"
-                autoPlay
+                autoPlay={false} // Desabilitar autoplay para o blur funcionar
                 muted
                 loop
                 preload="metadata"
+                onPlay={handleVideoPlay}
               />
+               {!videoStarted && (
+                <div className="absolute inset-0 bg-black/50 backdrop-blur-md flex flex-col items-center justify-center cursor-pointer" onClick={() => document.querySelector('video')?.play()}>
+                  <PlayCircle className="w-16 h-16 text-white/70 mb-4" />
+                  <p className="font-headline text-lg font-bold text-white tracking-wider">
+                    DE PLAY PARA ASSISTIR O VÍDEO
+                  </p>
+                </div>
+              )}
             </div>
           </motion.div>
           
