@@ -5,6 +5,7 @@
  * Core Philosophy:
  * The goal is to allow any client (authenticated or anonymous) to log an initial
  * visit event. Once that event is written, it can only be updated in a very
+
  * specific way: to mark that a conversion link was clicked. All other modifications
  * are forbidden to protect data integrity.
  *
@@ -31,7 +32,7 @@ service cloud.firestore {
     /**
      * @description Rules for the leads collection. Allows any authenticated user to create their own lead document. Once created, updates are restricted to only the `hasClickedFinalLink` field by the document owner.
      * @path /leads/{userId}
-     * @allow (get, list): Any client can read the data for dashboarding.
+     * @allow (read): Any client can read the data for dashboarding.
      * @allow (create): An authenticated user can create their own lead document.
      * @allow (update): An authenticated user can update their own lead document, but only to change `hasClickedFinalLink`.
      * @deny (delete): No client can delete a lead document.
