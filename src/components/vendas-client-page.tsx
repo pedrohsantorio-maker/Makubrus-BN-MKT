@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { CountdownTimer } from '@/components/countdown-timer';
 import { MotionButton } from '@/components/motion-button';
-import { logEvent } from '@/lib/firebase';
+import { trackConversionClick } from '@/lib/tracking';
 import type { ImagePlaceholder } from '@/lib/placeholder-images';
 import { ShieldAlert, Users } from 'lucide-react';
 import { SalesPageHero } from '@/components/sales-page-hero';
@@ -42,8 +42,6 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
   const [vagas, setVagas] = useState(8);
 
   useEffect(() => {
-    logEvent("page_view", { title: "Sales Page" });
-    
     const interval = setInterval(() => {
       setVagas((v) => {
         if (v > 1) {
@@ -57,10 +55,16 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
     return () => clearInterval(interval);
   }, []);
 
-  const handleCtaClick = (placement: string) => {
-    logEvent('cta_click', { placement });
-    logEvent('begin_checkout'); // Important for funnel tracking
-    window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+  const handleCtaClick = async () => {
+    try {
+      await trackConversionClick();
+      console.log('Conversion tracked. Redirecting...');
+      window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+    } catch(error) {
+      console.error("Error tracking conversion click:", error);
+      // Still redirect the user even if tracking fails
+      window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+    }
   };
 
   return (
@@ -152,7 +156,7 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
             <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="font-headline text-4xl md:text-6xl font-bold tracking-tight">Vagas Quase Esgotadas</motion.h2>
             <motion.p variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="text-lg md:text-xl text-muted-foreground max-w-2xl">O acesso é extremamente limitado e será encerrado a qualquer momento. Esta é sua última oportunidade de entrar.</motion.p>
             <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} className="pt-8 w-full max-w-lg pointer-events-auto">
-                <MotionButton onClick={() => handleCtaClick('final_cta_click')} vibrate>
+                <MotionButton onClick={handleCtaClick} vibrate>
                     Entrar no grupo privado agora
                 </MotionButton>
             </motion.div>

@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow public read access to the leads collection for the dashboard
+    match /leads/{leadId} {
+      allow read: if true;
+      
+      // Allow creation if the user is authenticated (even anonymously)
+      // and the document ID matches their UID.
+      allow create: if request.auth != null && request.auth.uid == leadId;
+      
+      // Allow update only if the user is authenticated, the document ID
+      // matches their UID, and they are only changing the 'hasClickedFinalLink' field.
+      allow update: if request.auth != null 
+                    && request.auth.uid == leadId 
+                    && request.resource.data.keys().hasOnly(['hasClickedFinalLink', 'id', 'createdAt']);
+    }
+  }
+}

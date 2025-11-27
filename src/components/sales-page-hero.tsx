@@ -4,7 +4,7 @@
 import { motion } from 'framer-motion';
 import { SkullIcon } from '@/components/SkullIcon';
 import { MotionButton } from '@/components/motion-button';
-import { logEvent } from '@/lib/firebase';
+import { trackConversionClick } from '@/lib/tracking';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -22,10 +22,16 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } }
 };
 
-const handleCtaClick = (placement: string) => {
-    logEvent('cta_click', { placement });
-    logEvent('begin_checkout'); // Important for funnel tracking
-    window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+const handleCtaClick = async () => {
+    try {
+      await trackConversionClick();
+      console.log('Conversion tracked. Redirecting...');
+      window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+    } catch(error) {
+      console.error("Error tracking conversion click:", error);
+      // Still redirect the user even if tracking fails
+      window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
+    }
 };
 
 export const SalesPageHero = () => (
@@ -80,7 +86,7 @@ export const SalesPageHero = () => (
       Acesso liberado a uma coleção de materiais restritos, raros e privados. O que você verá aqui não pode ser encontrado em nenhum outro lugar.
     </motion.p>
     <motion.div variants={itemVariants} className="pt-8 w-full max-w-md pointer-events-auto">
-      <MotionButton onClick={() => handleCtaClick('main_cta_click')} pulse>
+      <MotionButton onClick={handleCtaClick} pulse>
         GARANTIR ACESSO VITALÍCIO
       </MotionButton>
     </motion.div>

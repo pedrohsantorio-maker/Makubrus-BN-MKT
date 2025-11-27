@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Check, ShieldCheck } from 'lucide-react';
 import { MotionButton } from '@/components/motion-button';
-import { logEvent } from '@/lib/firebase';
+import { trackConversionClick } from '@/lib/tracking';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -48,39 +48,16 @@ const benefits = [
 
 export function VslClientPage() {
   const router = useRouter();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const timeWatched = useRef(0);
 
-  useEffect(() => {
-    logEvent("vsl_view");
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    const interval = setInterval(() => {
-      if (!video.paused) {
-        timeWatched.current += 1;
-      }
-    }, 1000);
-
-    const handleBeforeUnload = () => {
-      logEvent('vsl_watch_time', { watchTimeSeconds: timeWatched.current });
-    };
-    
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      if (timeWatched.current > 0) {
-        logEvent('vsl_watch_time', { watchTimeSeconds: timeWatched.current });
-      }
-    };
-  }, []);
-
-  const handleCtaClick = () => {
-    logEvent("cta_click", { placement: "vsl_page_cta" });
-    router.push('/vendas');
+  const handleCtaClick = async () => {
+    try {
+      await trackConversionClick();
+      console.log('Conversion tracked on VSL page. Redirecting...');
+      router.push('/vendas');
+    } catch(error) {
+      console.error("Error tracking conversion click:", error);
+      router.push('/vendas');
+    }
   };
 
   return (
@@ -127,7 +104,6 @@ export function VslClientPage() {
           >
             <div className="w-full h-full bg-black flex items-center justify-center rounded-md">
               <video
-                ref={videoRef}
                 controls
                 className="w-full h-full rounded-md"
                 src="https://i.imgur.com/1UUPryn.mp4"

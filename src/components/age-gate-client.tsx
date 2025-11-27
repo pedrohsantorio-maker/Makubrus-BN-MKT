@@ -1,28 +1,35 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { SkullIcon } from '@/components/SkullIcon';
-import { logEvent } from '@/lib/firebase';
+import { trackFirstVisit } from '@/lib/tracking';
 
 export function AgeGateClient() {
   const router = useRouter();
+  const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
-    // This is the first event, tracking the initial visit.
-    logEvent("age_gate_view", { title: "Age Gate" });
+    const handleFirstVisit = async () => {
+      try {
+        await trackFirstVisit();
+      } catch (error) {
+        console.error("Error tracking first visit:", error);
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+    handleFirstVisit();
   }, []);
 
   const handleAdult = () => {
-    logEvent("age_gate_confirm", { result: "adult" });
     router.push('/carregando');
   };
 
   const handleMinor = () => {
-    logEvent("age_gate_confirm", { result: "minor" });
     router.push('/acesso-negado');
   };
 
@@ -40,6 +47,22 @@ export function AgeGateClient() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
   };
+
+  if (isProcessing) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-black p-8 text-center text-white">
+        <div
+          className="w-12 h-12 border-2 border-primary/50 border-t-primary rounded-full"
+          style={{ animation: 'spin 1.2s linear infinite' }}
+        ></div>
+         <style jsx>{`
+            @keyframes spin {
+              to { transform: rotate(360deg); }
+            }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <motion.div 
