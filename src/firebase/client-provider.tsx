@@ -13,12 +13,12 @@ import type { Firestore } from 'firebase/firestore';
 // This is a placeholder that will be replaced by the actual config.
 // The important part is that this code is in a 'use client' file.
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  "projectId": "clandestine-access-2-706-5924d",
+  "appId": "1:1077552360438:web:bce96a93207b828c1d75d7",
+  "apiKey": "AIzaSyB4Be7_2gTFfCV3DOutNLlTQlzHYL2Do24",
+  "authDomain": "clandestine-access-2-706-5924d.firebaseapp.com",
+  "measurementId": "",
+  "messagingSenderId": "1077552360438"
 };
 
 
