@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, Timestamp } from 'firebase/firestore';
 import { firestore } from '@/lib/firebase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -10,13 +10,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Users, MousePointerClick } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { CardDescription } from '@/components/ui/card';
 
 interface Lead {
   id: string;
-  createdAt: {
-    seconds: number;
-    nanoseconds: number;
-  };
+  createdAt: Timestamp;
   hasClickedFinalLink: boolean;
 }
 
@@ -27,21 +25,21 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!firestore) {
-      console.error("Firestore is not initialized.");
-      setLoading(false);
-      return;
-    }
-
+    // This component does not require authentication
+    
     // Listener for total visits
     const leadsCollectionRef = collection(firestore, 'leads');
     const unsubscribeTotal = onSnapshot(leadsCollectionRef, (snapshot) => {
       setTotalVisits(snapshot.size);
       
-      const leadsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Lead[];
+      const leadsData = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            createdAt: data.createdAt,
+            hasClickedFinalLink: data.hasClickedFinalLink
+          } as Lead
+      });
       
       leadsData.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
 
@@ -136,7 +134,7 @@ export default function DashboardPage() {
                                 <TableRow key={lead.id}>
                                     <TableCell className='font-mono text-xs'>{lead.id}</TableCell>
                                     <TableCell>
-                                        {format(new Date(lead.createdAt.seconds * 1000), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
+                                        {lead.createdAt ? format(lead.createdAt.toDate(), "dd/MM/yyyy HH:mm:ss", { locale: ptBR }) : 'N/A'}
                                     </TableCell>
                                     <TableCell className='text-right'>
                                         <Badge variant={lead.hasClickedFinalLink ? 'default' : 'secondary'} className={lead.hasClickedFinalLink ? 'bg-green-600' : ''}>

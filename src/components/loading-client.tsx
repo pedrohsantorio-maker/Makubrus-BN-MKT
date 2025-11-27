@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { logEvent } from '@/lib/firebase';
 
 const loadingTexts = [
   "Validando seu acesso reservado...",
@@ -19,8 +18,6 @@ export function LoadingClient() {
   const [glitch, setGlitch] = useState(false);
 
   useEffect(() => {
-    logEvent("page_view", { title: "Loading" });
-
     const textInterval = setInterval(() => {
       setGlitch(true);
       setTimeout(() => setGlitch(false), 80);
@@ -34,7 +31,6 @@ export function LoadingClient() {
     }, 625); // 2.5s / 4 texts
 
     const redirectTimeout = setTimeout(() => {
-      logEvent("loading_sequence_complete");
       router.push('/vsl');
     }, 2500);
 

@@ -51,11 +51,10 @@ export function VslClientPage() {
 
   const handleCtaClick = async () => {
     try {
-      await trackConversionClick();
-      console.log('Conversion tracked on VSL page. Redirecting...');
+      // We don't track this click for the dashboard, only final conversion
       router.push('/vendas');
     } catch(error) {
-      console.error("Error tracking conversion click:", error);
+      console.error("Error navigating to sales page:", error);
       router.push('/vendas');
     }
   };

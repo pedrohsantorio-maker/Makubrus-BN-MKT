@@ -17,9 +17,10 @@ export function AgeGateClient() {
       try {
         await trackFirstVisit();
       } catch (error) {
-        console.error("Error tracking first visit:", error);
+        // Errors are logged in trackFirstVisit, no need to log again
       } finally {
-        setIsProcessing(false);
+        // A slight delay to prevent UI flashing
+        setTimeout(() => setIsProcessing(false), 250);
       }
     };
     handleFirstVisit();

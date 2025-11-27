@@ -38,13 +38,10 @@ export const trackFirstVisit = async () => {
         createdAt: serverTimestamp(),
         hasClickedFinalLink: false
       });
-      console.log('New lead tracked:', userId);
-    } else {
-      console.log('Returning lead:', userId);
     }
   } catch (error) {
     console.error("Error in trackFirstVisit:", error);
-    throw error;
+    // Don't re-throw, to avoid crashing the app if tracking fails
   }
 };
 
@@ -54,24 +51,11 @@ export const trackConversionClick = async () => {
     const userId = await getUserId();
     const leadDocRef = doc(firestore, 'leads', userId);
 
-    await updateDoc(leadDocRef, {
-      hasClickedFinalLink: true
-    });
-    console.log('Conversion click tracked for user:', userId);
+    // Use setDoc with merge to create or update
+    await setDoc(leadDocRef, { hasClickedFinalLink: true }, { merge: true });
+
   } catch (error) {
     console.error("Error in trackConversionClick:", error);
-    // If the user document doesn't exist, create it and mark as clicked
-    if ((error as any).code === 'not-found') {
-        const userId = await getUserId();
-        const leadDocRef = doc(firestore, 'leads', userId);
-        await setDoc(leadDocRef, {
-            id: userId,
-            createdAt: serverTimestamp(),
-            hasClickedFinalLink: true
-        });
-        console.log('New lead tracked from conversion click:', userId);
-    } else {
-       throw error;
-    }
+    // Don't re-throw
   }
 };
