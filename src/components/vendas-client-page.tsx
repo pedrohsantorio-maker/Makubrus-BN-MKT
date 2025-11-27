@@ -13,7 +13,7 @@ import React from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import {useEffect, useState} from 'react';
-import { useFirebase } from '@/firebase/firebase-provider';
+import { useFirebase } from '@/firebase';
 
 interface VendasClientPageProps {
     carouselImages: ImagePlaceholder[];
@@ -64,7 +64,7 @@ export function VendasClientPage({ carouselImages, previewImages }: VendasClient
         return;
     }
     try {
-      await trackConversionClick(firestore, user.uid);
+      trackConversionClick(firestore, user.uid);
       console.log('Conversion tracked. Redirecting...');
       window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
     } catch(error) {

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { SkullIcon } from '@/components/SkullIcon';
 import { MotionButton } from '@/components/motion-button';
 import { trackConversionClick } from '@/lib/tracking';
-import { useFirebase } from '@/firebase/firebase-provider';
+import { useFirebase } from '@/firebase';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -34,7 +34,7 @@ export const SalesPageHero = () => {
             return;
         }
         try {
-          await trackConversionClick(firestore, user.uid);
+          trackConversionClick(firestore, user.uid);
           console.log('Conversion tracked. Redirecting...');
           window.open('https://compraseguraonline.org.ua/c/d8fbe753f8', '_blank');
         } catch(error) {

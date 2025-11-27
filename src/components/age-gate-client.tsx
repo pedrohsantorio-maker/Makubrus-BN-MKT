@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { SkullIcon } from '@/components/SkullIcon';
 import { trackFirstVisit } from '@/lib/tracking';
-import { useFirebase } from '@/firebase/firebase-provider';
+import { useFirebase } from '@/firebase';
 
 export function AgeGateClient() {
   const router = useRouter();
