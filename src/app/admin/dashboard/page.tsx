@@ -1,8 +1,8 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
 import { collection, onSnapshot, query, where, Timestamp } from 'firebase/firestore';
-import { firestore } from '@/lib/firebase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { Users, MousePointerClick } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CardDescription } from '@/components/ui/card';
+import { useFirebase } from '@/firebase/firebase-provider';
 
 interface Lead {
   id: string;
@@ -19,14 +20,18 @@ interface Lead {
 }
 
 export default function DashboardPage() {
+  const { firestore } = useFirebase();
   const [totalVisits, setTotalVisits] = useState(0);
   const [finalLinkClicks, setFinalLinkClicks] = useState(0);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // This component does not require authentication
-    
+    if (!firestore) {
+        // Firebase is not yet available.
+        return;
+    }
+
     // Listener for total visits
     const leadsCollectionRef = collection(firestore, 'leads');
     const unsubscribeTotal = onSnapshot(leadsCollectionRef, (snapshot) => {
@@ -63,7 +68,7 @@ export default function DashboardPage() {
       unsubscribeTotal();
       unsubscribeClicks();
     };
-  }, []);
+  }, [firestore]);
 
   const metricCards = [
     {

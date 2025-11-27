@@ -7,24 +7,24 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { SkullIcon } from '@/components/SkullIcon';
 import { trackFirstVisit } from '@/lib/tracking';
+import { useFirebase } from '@/firebase/firebase-provider';
 
 export function AgeGateClient() {
   const router = useRouter();
+  const { firestore, user, loading } = useFirebase();
   const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
-    const handleFirstVisit = async () => {
-      try {
-        await trackFirstVisit();
-      } catch (error) {
-        // Errors are logged in trackFirstVisit, no need to log again
-      } finally {
-        // A slight delay to prevent UI flashing
-        setTimeout(() => setIsProcessing(false), 250);
-      }
-    };
-    handleFirstVisit();
-  }, []);
+    // Wait for firebase to initialize and user to be authenticated
+    if (!loading && firestore && user) {
+        trackFirstVisit(firestore, user.uid).finally(() => {
+            setTimeout(() => setIsProcessing(false), 250);
+        });
+    } else if (!loading) {
+      // If firebase is loaded but there's no user/firestore, stop processing
+      setIsProcessing(false);
+    }
+  }, [firestore, user, loading]);
 
   const handleAdult = () => {
     router.push('/carregando');
@@ -49,7 +49,7 @@ export function AgeGateClient() {
     visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
   };
 
-  if (isProcessing) {
+  if (isProcessing || loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-black p-8 text-center text-white">
         <div
