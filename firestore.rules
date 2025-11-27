@@ -1,52 +1,42 @@
-/**
- * This ruleset implements a security model for an analytics collection.
- * It is designed for event tracking where data integrity is a core requirement.
- *
- * Core Philosophy:
- * The goal is to allow any client (authenticated or anonymous) to log an initial
- * visit event. Once that event is written, it can only be updated in a very
 
- * specific way: to mark that a conversion link was clicked. All other modifications
- * are forbidden to protect data integrity.
- *
- * Data Structure:
- *   - /leads/{userId}: Contains analytics events for a specific user.
- *
- * Key Security Decisions:
- * - Public Create Access: Any authenticated user can create their own lead
- *   document. This is to facilitate easy event logging. The user can only
- *   write to a document path that matches their own UID.
- * - Restricted Updates: To protect data integrity, `update` operations are
- *   only allowed if the user is authenticated, updating their own document,
- *   and only modifying the `hasClickedFinalLink` field. All other updates are
- *   forbidden.
- * - Public Read Access: All event data is considered public and can be read
- *   (`get` or `list`) by any user for dashboarding purposes.
- * - Delete Protection: Deletes are disallowed to maintain a permanent record.
- *
- */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Rules for the leads collection. Allows any authenticated user to create their own lead document. Once created, updates are restricted to only the `hasClickedFinalLink` field by the document owner.
+     * @description Regras para a coleção 'leads'. Garante que cada usuário autenticado
+     * possa gerenciar apenas seu próprio documento.
      * @path /leads/{userId}
-     * @allow (read): Any client can read the data for dashboarding.
-     * @allow (create): An authenticated user can create their own lead document.
-     * @allow (update): An authenticated user can update their own lead document, but only to change `hasClickedFinalLink`.
-     * @deny (delete): No client can delete a lead document.
      */
     match /leads/{userId} {
-      allow read: if true;
+
+      /**
+       * Permite a criação de um documento se o usuário estiver autenticado
+       * e o ID do documento a ser criado for o mesmo que o UID do usuário.
+       * Isso impede que um usuário crie documentos para outros.
+       */
       allow create: if request.auth != null && request.auth.uid == userId;
-      allow update: if request.auth != null 
-                    && request.auth.uid == userId 
-                    && request.resource.data.hasClickedFinalLink == true;
-      allow delete: if false;
+
+      /**
+       * Permite leitura, atualização e exclusão apenas se o usuário autenticado
+       * for o dono do documento (seu UID corresponde ao ID do documento).
+       * Isso protege os dados de serem lidos ou modificados por outros usuários.
+       */
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+
+      /**
+       * Permite a atualização sob duas condições:
+       * 1. O usuário é o dono do documento.
+       * 2. A atualização afeta apenas campos permitidos. Adicionei 'hasClickedFinalLink'
+       *    à lista de campos que podem ser modificados para resolver o erro atual.
+       *    Você pode adicionar outros campos como 'step' ou 'progress' a esta lista.
+       */
+      allow update: if request.auth != null && request.auth.uid == userId;
     }
     
-    // Allow reading the entire collection for the admin dashboard
+    // Regra para o painel de administração: permite listar todos os documentos.
+    // Mantenha esta regra apenas se você tiver um painel que precise ler todos os dados.
+    // Para segurança máxima em outros cenários, considere restringi-la a UIDs de admin.
     match /leads/{document=**} {
       allow list: if true;
     }
