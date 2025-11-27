@@ -38,11 +38,11 @@ service cloud.firestore {
      * @deny (delete): No client can delete a lead document.
      */
     match /leads/{userId} {
-      allow read, create: if request.auth != null && request.auth.uid == userId;
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null 
                     && request.auth.uid == userId 
-                    && request.resource.data.hasClickedFinalLink == true
-                    && request.resource.data.createdAt == resource.data.createdAt;
+                    && request.resource.data.hasClickedFinalLink == true;
       allow delete: if false;
     }
     
