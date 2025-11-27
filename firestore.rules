@@ -1,30 +1,27 @@
 /**
- * This ruleset implements a write-once, read-many security model for an
- * analytics collection. It is designed for high-throughput event tracking where
- * data immutability is a core security requirement.
+ * This ruleset implements a security model for an analytics collection.
+ * It is designed for event tracking where data integrity is a core requirement.
  *
  * Core Philosophy:
- * The primary goal is to allow any client—authenticated or anonymous—to log
- * conversion events without restriction. Once an event is written, it is
- * considered permanent and cannot be altered or removed by any user, ensuring
- * the integrity of the analytics data. All logged events are publicly readable.
+ * The goal is to allow any client (authenticated or anonymous) to log an initial
+ * visit event. Once that event is written, it can only be updated in a very
+ * specific way: to mark that a conversion link was clicked. All other modifications
+ * are forbidden to protect data integrity.
  *
  * Data Structure:
- * All data is stored in a single, flat top-level collection:
- *   - /conversionEvents/{conversionEventId}: Contains individual analytics events.
+ *   - /leads/{userId}: Contains analytics events for a specific user.
  *
  * Key Security Decisions:
- * - Public Create Access: Any user or service, including anonymous ones, can
- *   create new documents in the `conversionEvents` collection. This is a
- *   deliberate choice to facilitate easy event logging from any client.
- * - Data Immutability: To protect data integrity, `update` and `delete`
- *   operations are strictly forbidden for all users on the `conversionEvents`
- *   collection.
+ * - Public Create Access: Any authenticated user can create their own lead
+ *   document. This is to facilitate easy event logging. The user can only
+ *   write to a document path that matches their own UID.
+ * - Restricted Updates: To protect data integrity, `update` operations are
+ *   only allowed if the user is authenticated, updating their own document,
+ *   and only modifying the `hasClickedFinalLink` field. All other updates are
+ *   forbidden.
  * - Public Read Access: All event data is considered public and can be read
- *   (`get` or `list`) by any user.
- * - No Data Validation: In line with a prototyping philosophy, these rules do
- *   not enforce the shape or type of the data being written. The focus is
- *   solely on access control.
+ *   (`get` or `list`) by any user for dashboarding purposes.
+ * - Delete Protection: Deletes are disallowed to maintain a permanent record.
  *
  */
 rules_version = '2';
@@ -32,17 +29,17 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Rules for the public analytics collection. Allows any user (including unauthenticated) to create new event documents. Once created, these documents are public to read but cannot be updated or deleted by anyone.
-     * @path /conversionEvents/{conversionEventId}
-     * @allow (create): An anonymous app user successfully writes a 'loading_sequence_complete' event.
-     * @deny (update): A user attempts to change the 'eventType' of an existing event document.
-     * @principle Enforces a write-once, read-many pattern for immutable analytics data.
+     * @description Rules for the leads collection. Allows any authenticated user to create their own lead document. Once created, updates are restricted to only the `hasClickedFinalLink` field by the document owner.
+     * @path /leads/{userId}
+     * @allow (get, list): Any client can read the data for dashboarding.
+     * @allow (create): An authenticated user can create their own lead document.
+     * @allow (update): An authenticated user can update their own lead document, but only to change `hasClickedFinalLink`.
+     * @deny (delete): No client can delete a lead document.
      */
-    match /conversionEvents/{conversionEventId} {
-      allow get: if true;
-      allow list: if true;
-      allow create: if true;
-      allow update: if false;
+    match /leads/{userId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId && request.resource.data.keys().hasOnly(['hasClickedFinalLink']);
       allow delete: if false;
     }
   }
