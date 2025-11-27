@@ -1,3 +1,4 @@
+
 'use client';
 
 import { firebaseConfig } from '@/firebase/config';
@@ -10,7 +11,8 @@ export function initializeFirebase() {
   if (!getApps().length) {
     let firebaseApp: FirebaseApp;
     try {
-      firebaseApp = initializeApp();
+      // This will only work on the client-side where the config is available
+      firebaseApp = initializeApp(firebaseConfig);
     } catch (e) {
       if (process.env.NODE_ENV === 'production') {
         console.warn('Automatic initialization failed. Falling back to firebase config object.', e);

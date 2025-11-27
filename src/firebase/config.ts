@@ -1,3 +1,4 @@
+
 export const firebaseConfig = {
   "projectId": "clandestine-access-2-706-5924d",
   "appId": "1:1077552360438:web:bce96a93207b828c1d75d7",
