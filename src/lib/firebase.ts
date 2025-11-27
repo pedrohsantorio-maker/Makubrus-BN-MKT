@@ -4,9 +4,10 @@
 import { initializeApp, getApps, type FirebaseOptions } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics, isSupported } from "firebase/analytics";
 
 // As this file is client-side, we can't use process.env here
+// These are placeholder values and will be replaced by the actual configuration
+// in a provider.
 const firebaseConfig: FirebaseOptions = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_AUTH_DOMAIN",
@@ -21,16 +22,4 @@ const app = getApps().length > 0 ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 
-// Initialize analytics only if it's supported
-let analytics;
-if (typeof window !== 'undefined') {
-    isSupported().then((supported) => {
-        if (supported) {
-            analytics = getAnalytics(app);
-        }
-    });
-}
-
-export { app, auth, firestore, analytics };
-
-    
+export { app, auth, firestore };
