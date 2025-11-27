@@ -38,13 +38,17 @@ service cloud.firestore {
      * @deny (delete): No client can delete a lead document.
      */
     match /leads/{userId} {
-      allow read: if true;
-      allow create: if request.auth != null && request.auth.uid == userId;
+      allow read, create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null 
                     && request.auth.uid == userId 
                     && request.resource.data.hasClickedFinalLink == true
                     && request.resource.data.createdAt == resource.data.createdAt;
       allow delete: if false;
+    }
+    
+    // Allow reading the entire collection for the admin dashboard
+    match /leads/{document=**} {
+      allow list: if true;
     }
   }
 }
